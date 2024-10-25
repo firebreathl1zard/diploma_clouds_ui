@@ -25,9 +25,9 @@ git branch --delete feature/auth-page - удалит локально
 ```
 
 ## пример веток
-feature/имя-фичи
-hotfix/имя-бага
-docs/имя-документа(мб описания)
+- feature/имя-фичи
+- hotfix/имя-бага
+- docs/имя-документа(мб описания)
 
 
 
