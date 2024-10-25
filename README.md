@@ -5,7 +5,8 @@
 
 
 
-``` начало работы
+### для работы с чем либо 
+``` 
 git checkout -b feature/auth-page
 git add file/dir
 git commit -m "file/dir added"
@@ -17,12 +18,20 @@ git push -u origin feature/auth-page
 git checkout dev
 ```
 
-``` удаление лишних веток
+### удаление лишних веток
+``` 
 git fetch --all --tags --prune --jobs=10 - почистит локальные, если такой нет в репозитории
 git branch --delete feature/auth-page - удалит локально
 ```
 
-# stack
+## пример веток
+feature/имя-фичи
+hotfix/имя-бага
+docs/имя-документа(мб описания)
+
+
+
+## stack
     "bootstrap": "^5.3.3",
     "react": "^18.3.1",
     "react-beautiful-dnd": "^13.1.1",
