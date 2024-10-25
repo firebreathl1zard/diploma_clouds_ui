@@ -24,6 +24,7 @@ git fetch --all --tags --prune --jobs=10 - почистит локальные, 
 git branch --delete feature/auth-page - удалит локально
 ```
 
+
 ## пример веток
 - feature/имя-фичи
 - hotfix/имя-бага
