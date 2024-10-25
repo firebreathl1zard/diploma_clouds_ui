@@ -4,7 +4,6 @@
 2. git pull
 
 
-
 ### для работы с чем либо 
 ``` 
 git checkout -b feature/auth-page
