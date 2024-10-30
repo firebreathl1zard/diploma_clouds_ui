@@ -44,3 +44,4 @@ git branch --delete feature/auth-page - удалит локально
     golang
 test
 test
+test
