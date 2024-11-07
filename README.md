@@ -37,6 +37,3 @@ git branch --delete feature/auth-page - удалит локально
 
 ###    backend
     golang
-test
-test
-test
