@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
-const Item = ({ item, index, handleItemDragStart, handleItemDrag, handleItemDragEnd, handleItemDoubleClick }) => {
+const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemDoubleClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isDragging, setIsDragging] = useState(false); // Состояние для отслеживания перетаскивания
+  const [isDragging, setIsDragging] = useState(false);
+  const [offsetX, setOffsetX] = useState(0);
+  const [offsetY, setOffsetY] = useState(0);
+
 
   const handleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -11,20 +14,32 @@ const Item = ({ item, index, handleItemDragStart, handleItemDrag, handleItemDrag
   };
 
   useEffect(() => {
-    // Обработчик события mousemove для перетаскивания элемента
     const handleMouseMove = (event) => {
       if (isDragging) {
         const { clientX, clientY } = event;
-        handleItemDrag(item, { clientX, clientY });
+        handleItemDragStart(item, { clientX, clientY, offsetX, offsetY }); 
       }
     };
 
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [isDragging, item, handleItemDragStart, offsetX, offsetY]);
 
-    window.addEventListener('mousemove', handleMouseMove); // Добавляем обработчик события mousemove к документу
 
-    
-    return () => window.removeEventListener('mousemove', handleMouseMove);  // Очистка обработчика события mousemove
-  }, [isDragging, item, handleItemDrag]);
+  const handleMouseDown = (event) => {
+    setIsDragging(true);
+    const { clientX, clientY } = event;
+    const rect = event.target.getBoundingClientRect();
+    setOffsetX(clientX - rect.left);
+    setOffsetY(clientY - rect.top);
+    handleItemDragStart(item, { clientX, clientY, offsetX, offsetY }); 
+    event.preventDefault(); 
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    handleItemDragEnd(item);
+  };
 
   return (
     <Draggable
@@ -44,21 +59,15 @@ const Item = ({ item, index, handleItemDragStart, handleItemDrag, handleItemDrag
             backgroundColor: 'lightblue',
             padding: '10px',
             cursor: 'move',
-            opacity: item.isDragging ? 0.5 : 1,
+            opacity: isDragging ? 0.5 : 1,
             width: isExpanded ? '200px' : '100px',
+            userSelect: 'none', 
           }}
-          onMouseDown={(event) => {
-            setIsDragging(true);
-            const { clientX, clientY } = event; 
-            handleItemDragStart(item, { clientX, clientY }); 
-          }}
-          onMouseUp={() => {
-            setIsDragging(false);
-            handleItemDragEnd(item);
-          }}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
           onDoubleClick={handleExpand}
         >
-          <div>
+          <div style={{userSelect: 'none'}}> 
             {item.content}
           </div>
           {isExpanded && (

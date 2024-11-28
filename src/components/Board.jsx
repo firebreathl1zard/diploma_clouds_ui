@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Item from './Item';
 
-const Board = ({ items, setItems, isDragging }) => {     // Создаем ссылку на DOM-элемент доски
+const Board = ({ items, setItems, isDragging , listId }) => {     // Создаем ссылку на DOM-элемент доски
   const boardRef = useRef(null);
 
   const handleItemDragStart = (item, event) => {    // Обработчик события, которое вызывается при начале перетаскивания элемента
@@ -17,6 +17,7 @@ const Board = ({ items, setItems, isDragging }) => {     // Создаем сс�
           }
         : i
     );
+    
     setItems(updatedItems);
     isDragging.current = true; //  Устанавливаем флаг перетаскивания
   };
