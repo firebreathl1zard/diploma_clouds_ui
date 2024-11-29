@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
-import Item from './Item';
+import Item from '../Item';
 
 const Board = ({ items, setItems, isDragging }) => {
   const boardRef = useRef(null);
@@ -55,7 +55,7 @@ const Board = ({ items, setItems, isDragging }) => {
   };
 
   return (
-    <Droppable droppableId="board">
+    <Droppable droppableId="board2">
       {(provided) => (
         <div
           ref={boardRef}
@@ -64,9 +64,10 @@ const Board = ({ items, setItems, isDragging }) => {
             display: 'flex',
             flexDirection: 'column',
             minHeight: '700px',
-            width: '100%',
+            width: '200px',
             border: '1px solid black',
-            position: 'relative',
+            position: 'absolute',
+            // zIndex: '1',
           }}
         >
           {items.map((item, index) => (
