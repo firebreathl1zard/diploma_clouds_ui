@@ -19,23 +19,23 @@ const Menu = () => {
     { id: '4', content: 'Объект 4', x: 10, y: 160, isDragging: false, expanded: false },
   ]);
 
-  const isDragging = useRef(false);  // Ссылка на DOM-элемент, чтобы отслеживать, перетаскивается ли элемент
+  const isDragging = useRef(false);  
 
-  const handleOnDragEnd = (result) => {    // Обработчик события, которое вызывается при завершении перетаскивания
+  const handleOnDragEnd = (result) => {    
     if (!result.destination) return;
 
-    const itemsCopy = Array.from(items);            //Удаляет исходное положение и заменяет на новое
+    const itemsCopy = Array.from(items);            
     const [reorderedItem] = itemsCopy.splice(result.source.index, 1);
     itemsCopy.splice(result.destination.index, 0, reorderedItem);
 
-    setItems(itemsCopy);   //Обновляет состояние
+    setItems(itemsCopy);  
   };
   
 
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
     <Board items={items} setItems={setItems} isDragging={isDragging}>
-    <div className="app">
+    {/* <div className="app">
       <button className="burger" onClick={toggleMenu}>
         {isOpen ? 'Close' : 'Open'} Menu
       </button>
@@ -49,7 +49,7 @@ const Menu = () => {
           </ul>
         </nav>
       </div>
-    </div>
+    </div> */}
     </Board>
     </DragDropContext>
 

@@ -25,15 +25,11 @@ const HomePages = () => {
   };
 
   return (
-    <>
-    <Menu/>
     <DragDropContext onDragEnd={handleOnDragEnd}>
-      <Board items={items} setItems={setItems} isDragging={isDragging}>
-        <Menu/>
-      <Board items={items} setItems={setItems} isDragging={isDragging}/>
-         </Board>
+      
+      <Menu/>
+      <Board items={items} setItems={setItems} isDragging={isDragging} />
     </DragDropContext>
-    </>
   );
 };
 

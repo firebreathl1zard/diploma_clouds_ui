@@ -69,7 +69,7 @@ const Board = ({ items, setItems, isDragging }) => {
             position: 'relative',
           }}
         >
-          {items.map((item, index) => (
+          {/* {items.map((item, index) => (
             <Item
               key={item.id}
               item={item}
@@ -79,7 +79,7 @@ const Board = ({ items, setItems, isDragging }) => {
               handleItemDragEnd={handleItemDragEnd}
               handleItemDoubleClick={handleItemDoubleClick}
             />
-          ))}
+          ))} */}
           {provided.placeholder}
         </div>
       )}
