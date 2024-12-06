@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
+import Name from './Item/Name'; 
 
 const Item = ({ item, index, handleItemDragStart, handleItemDrag, handleItemDragEnd, handleItemDoubleClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isDragging, setIsDragging] = useState(false); // Состояние для отслеживания перетаскивания
+  const [isDragging, setIsDragging] = useState(false); 
+  const [title, setTitle] = useState('kakashka'); 
 
   const handleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -11,7 +13,18 @@ const Item = ({ item, index, handleItemDragStart, handleItemDrag, handleItemDrag
   };
 
   useEffect(() => {
-    // Обработчик события mousemove для перетаскивания элемента
+    const fetchTitle = async () => {
+      try {
+        const response = await fetch(``);
+        const data = await response.json();
+        setTitle(data.title); 
+      } catch (error) {
+        console.error('Ошибка при получении названия:', error);
+      }
+    };
+
+    fetchTitle(); 
+
     const handleMouseMove = (event) => {
       if (isDragging) {
         const { clientX, clientY } = event;
@@ -19,11 +32,9 @@ const Item = ({ item, index, handleItemDragStart, handleItemDrag, handleItemDrag
       }
     };
 
+    window.addEventListener('mousemove', handleMouseMove); 
 
-    window.addEventListener('mousemove', handleMouseMove); // Добавляем обработчик события mousemove к документу
-
-    
-    return () => window.removeEventListener('mousemove', handleMouseMove);  // Очистка обработчика события mousemove
+    return () => window.removeEventListener('mousemove', handleMouseMove);  
   }, [isDragging, item, handleItemDrag]);
 
   return (
@@ -58,6 +69,7 @@ const Item = ({ item, index, handleItemDragStart, handleItemDrag, handleItemDrag
           }}
           onDoubleClick={handleExpand}
         >
+          <Name title={title} /> 
           <div>
             {item.content}
           </div>

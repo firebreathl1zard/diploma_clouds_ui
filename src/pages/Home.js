@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import Board from '../components/Board';
+import Menu from '../components/Menu/Menu';
 
 const HomePages = () => {
   //Хранения элементов и их состояние
@@ -25,6 +26,8 @@ const HomePages = () => {
 
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
+      
+      <Menu/>
       <Board items={items} setItems={setItems} isDragging={isDragging} />
     </DragDropContext>
   );
