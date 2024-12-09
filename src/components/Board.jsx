@@ -2,34 +2,34 @@ import React, { useRef } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Item from './Item';
 
-const Board = ({ items, setItems, isDragging , listId }) => {     // Создаем ссылку на DOM-элемент доски
+const Board = ({ items, setItems, isDragging, listId }) => {
   const boardRef = useRef(null);
 
-  const handleItemDragStart = (item, event) => {    // Обработчик события, которое вызывается при начале перетаскивания элемента
-    const { clientX, clientY } = event;     // Получаем координаты курсора мыши при начале перетаскивания
-    const updatedItems = items.map((i) =>   // Обновляем состояние `items`, чтобы узнать, что элемент перетаскивается
+  const handleItemDragStart = (item, event) => {
+    const { clientX, clientY } = event;
+    const updatedItems = items.map((i) =>
       i.id === item.id
         ? {
             ...i,
             x: clientX - 25,
             y: clientY - 25,
-            isDragging: true, 
+            isDragging: true,
           }
         : i
     );
-    
+
     setItems(updatedItems);
-    isDragging.current = true; //  Устанавливаем флаг перетаскивания
+    isDragging.current = true; // Устанавливаем флаг перетаскивания
   };
 
   const handleItemDrag = (item, event) => {
     const { clientX, clientY } = event;
-    const boardRect = boardRef.current.getBoundingClientRect();  // Получаем прямоугольник, ограничивающий область доски
+    const boardRect = boardRef.current.getBoundingClientRect();
 
-    const newX = Math.max(0, Math.min(clientX - boardRect.left - 25, boardRect.width - 50));   // Вычисляем новые координаты элемента, чтобы он оставался в пределах доски
+    const newX = Math.max(0, Math.min(clientX - boardRect.left - 25, boardRect.width - 50));
     const newY = Math.max(0, Math.min(clientY - boardRect.top - 25, boardRect.height - 50));
 
-    const updatedItems = items.map((i) =>     // Обновляем состояние `items`, чтобы обновить координаты перетаскиваемого элемента
+    const updatedItems = items.map((i) =>
       i.id === item.id
         ? {
             ...i,
@@ -42,17 +42,25 @@ const Board = ({ items, setItems, isDragging , listId }) => {     // Созда�
     setItems(updatedItems);
   };
 
-  const handleItemDragEnd = (item) => {      
-    const updatedItems = items.map((i) =>     // Обновляем состояние `items`, чтобы указать, что элемент больше не перетаскивается
+  const handleItemDragEnd = (item) => {
+    const updatedItems = items.map((i) =>
       i.id === item.id
         ? { ...i, isDragging: false }
         : i
     );
-    setItems(updatedItems);
+
+    // Устанавливаем z-index для перетаскиваемого элемента
+    const maxZIndex = Math.max(...updatedItems.map(i => i.zIndex || 0));
+    const updatedItemsWithZIndex = updatedItems.map((i) => ({
+      ...i,
+      zIndex: i.id === item.id ? maxZIndex + 1 : (i.zIndex || 0),
+    }));
+
+    setItems(updatedItemsWithZIndex);
     isDragging.current = false;
   };
 
-  const handleItemDoubleClick = (itemId) => {         // Сбрасываем флаг перетаскивания
+  const handleItemDoubleClick = (itemId) => {
     setItems(items.map((item) => (item.id === itemId ? { ...item, expanded: !item.expanded } : item)));
   };
 
@@ -72,7 +80,7 @@ const Board = ({ items, setItems, isDragging , listId }) => {     // Созда�
           }}
         >
           {items.map((item, index) => (
-            <Item      // Отрисовываем каждый элемент на доске
+            <Item
               key={item.id}
               item={item}
               index={index}
@@ -82,7 +90,7 @@ const Board = ({ items, setItems, isDragging , listId }) => {     // Созда�
               handleItemDoubleClick={handleItemDoubleClick}
             />
           ))}
-          {provided.placeholder}     
+          {provided.placeholder}
         </div>
       )}
     </Droppable>
