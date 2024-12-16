@@ -37,7 +37,7 @@ const Board = ({ items, setItems, isDragging, listId }) => {
       i.id === item.id
         ? {
             ...i,
-            x: newX ,
+            x: newX,
             y: newY,
             isDragging: true,
           }
@@ -83,9 +83,18 @@ const Board = ({ items, setItems, isDragging, listId }) => {
             position: 'relative',
           }}
         >
-
+        
           {items.map((item, index) => (
-
+            <Item
+              key={item.id}
+              item={item}
+              index={index}
+              onDragStart={handleItemDragStart}
+              onDrag={handleItemDrag}
+              onDragEnd={handleItemDragEnd}
+              onDoubleClick={handleItemDoubleClick}
+            />
+          ))}
           {provided.placeholder}
         </div>
       )}
