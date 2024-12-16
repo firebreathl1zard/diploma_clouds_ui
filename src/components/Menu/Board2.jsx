@@ -1,10 +1,8 @@
 import React, { useRef } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
-import Item from './Item';
+import Item from '../Item';
 
-
-const Board = ({ items, setItems, isDragging, listId }) => {
-
+const Board = ({ items, setItems, isDragging }) => {
   const boardRef = useRef(null);
 
   const handleItemDragStart = (item, event) => {
@@ -19,26 +17,19 @@ const Board = ({ items, setItems, isDragging, listId }) => {
           }
         : i
     );
-
     setItems(updatedItems);
-
-    isDragging.current = true; // Устанавливаем флаг перетаскивания
-
+    isDragging.current = true;
   };
 
   const handleItemDrag = (item, event) => {
     const { clientX, clientY } = event;
-    const boardRect = boardRef.current.getBoundingClientRect();
-
-    const newX = Math.max(0, Math.min(clientX - boardRect.left - 25, boardRect.width - 50));
-    const newY = Math.max(0, Math.min(clientY - boardRect.top - 25, boardRect.height - 50));
 
     const updatedItems = items.map((i) =>
       i.id === item.id
         ? {
             ...i,
-            x: newX ,
-            y: newY,
+            x: clientX - 25, 
+            y: clientY - 25, 
             isDragging: true,
           }
         : i
@@ -52,15 +43,7 @@ const Board = ({ items, setItems, isDragging, listId }) => {
         ? { ...i, isDragging: false }
         : i
     );
-
-    // Устанавливаем z-index для перетаскиваемого элемента
-    const maxZIndex = Math.max(...updatedItems.map(i => i.zIndex || 0));
-    const updatedItemsWithZIndex = updatedItems.map((i) => ({
-      ...i,
-      zIndex: i.id === item.id ? maxZIndex + 1 : (i.zIndex || 0),
-    }));
-
-    setItems(updatedItemsWithZIndex);
+    setItems(updatedItems);
     isDragging.current = false;
   };
 
@@ -69,7 +52,7 @@ const Board = ({ items, setItems, isDragging, listId }) => {
   };
 
   return (
-    <Droppable droppableId="board">
+    <Droppable droppableId="board2">
       {(provided) => (
         <div
           ref={boardRef}
@@ -78,14 +61,24 @@ const Board = ({ items, setItems, isDragging, listId }) => {
             display: 'flex',
             flexDirection: 'column',
             minHeight: '700px',
-            width: '100%',
+            width: '200px',
             border: '1px solid black',
-            position: 'relative',
+            position: 'absolute',
+            zIndex: '1',
+            overflow: 'visible', // Убедитесь, что overflow не ограничивает видимость
           }}
         >
-
           {items.map((item, index) => (
-
+            <Item
+              key={item.id}
+              item={item}
+              index={index}
+              handleItemDragStart={handleItemDragStart}
+              handleItemDrag={handleItemDrag}
+              handleItemDragEnd={handleItemDragEnd}
+              handleItemDoubleClick={handleItemDoubleClick}
+            />
+          ))}
           {provided.placeholder}
         </div>
       )}

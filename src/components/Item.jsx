@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
+
 import Title from './Item/Title';
 import Team from './Item/Team';
 import Investment from './Item/Investment';
@@ -8,8 +9,10 @@ import MachineSelection from './Item/MachineSelection';
 import PaymentButton from './Item/PaymentButton';
 import Logs from './Item/Logs';
 
+
 const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemDoubleClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
   const [isDragging, setIsDragging] = useState(false);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
@@ -22,18 +25,33 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
 
   const machines = ['Машина A', 'Машина B', 'Машина C'];
 
+
   const handleExpand = () => {
     setIsExpanded(!isExpanded);
     handleItemDoubleClick(item.id);
   };
 
   useEffect(() => {
+
+    const fetchTitle = async () => {
+      try {
+        const response = await fetch(``);
+        const data = await response.json();
+        setTitle(data.title); 
+      } catch (error) {
+        console.error('Ошибка при получении названия:', error);
+      }
+    };
+
+    fetchTitle(); 
+    
     const handleMouseMove = (event) => {
       if (isDragging) {
         const { clientX, clientY } = event;
         handleItemDragStart(item, { clientX, clientY, offsetX, offsetY });
       }
     };
+
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
@@ -65,6 +83,7 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
     setSelectedMachine('');
   };
 
+
   return (
     <Draggable
       key={item.id}
@@ -77,7 +96,7 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
           {...provided.draggableProps}
           style={{
             position: 'absolute',
-            left: item .x,
+            left: item.x,
             top: item.y,
             backgroundColor: 'lightblue',
             padding: '10px',
@@ -93,6 +112,7 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
           }}
           onMouseUp={handleMouseUp}
         >
+
           <div
             onMouseDown={handleMouseDown}
             style={{
@@ -102,6 +122,7 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
             }}
             onDoubleClick={handleExpand}
           >
+
             {item.content}
           </div>
           {isExpanded && (
