@@ -2,7 +2,9 @@ import React, { useRef } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Item from './Item';
 
-const Board = ({ items, setItems, isDragging }) => {
+
+const Board = ({ items, setItems, isDragging, listId }) => {
+
   const boardRef = useRef(null);
 
   const handleItemDragStart = (item, event) => {
@@ -17,13 +19,17 @@ const Board = ({ items, setItems, isDragging }) => {
           }
         : i
     );
+
     setItems(updatedItems);
-    isDragging.current = true;
+
+    isDragging.current = true; // Устанавливаем флаг перетаскивания
+
   };
 
   const handleItemDrag = (item, event) => {
     const { clientX, clientY } = event;
     const boardRect = boardRef.current.getBoundingClientRect();
+
     const newX = Math.max(0, Math.min(clientX - boardRect.left - 25, boardRect.width - 50));
     const newY = Math.max(0, Math.min(clientY - boardRect.top - 25, boardRect.height - 50));
 
@@ -46,7 +52,15 @@ const Board = ({ items, setItems, isDragging }) => {
         ? { ...i, isDragging: false }
         : i
     );
-    setItems(updatedItems);
+
+    // Устанавливаем z-index для перетаскиваемого элемента
+    const maxZIndex = Math.max(...updatedItems.map(i => i.zIndex || 0));
+    const updatedItemsWithZIndex = updatedItems.map((i) => ({
+      ...i,
+      zIndex: i.id === item.id ? maxZIndex + 1 : (i.zIndex || 0),
+    }));
+
+    setItems(updatedItemsWithZIndex);
     isDragging.current = false;
   };
 
@@ -69,17 +83,9 @@ const Board = ({ items, setItems, isDragging }) => {
             position: 'relative',
           }}
         >
-          {/* {items.map((item, index) => (
-            <Item
-              key={item.id}
-              item={item}
-              index={index}
-              handleItemDragStart={handleItemDragStart}
-              handleItemDrag={handleItemDrag}
-              handleItemDragEnd={handleItemDragEnd}
-              handleItemDoubleClick={handleItemDoubleClick}
-            />
-          ))} */}
+
+          {items.map((item, index) => (
+
           {provided.placeholder}
         </div>
       )}
