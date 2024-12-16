@@ -6,10 +6,7 @@ import Menu from '../components/Menu/Menu';
 const HomePages = () => {
   //Хранения элементов и их состояние
   const [items, setItems] = useState([
-    { id: '1', content: 'Объект 1', x: 10, y: 10, isDragging: false, expanded: false, zIndex: 1 },
-    { id: '2', content: 'Объект 2', x: 10, y: 60, isDragging: false, expanded: false, zIndex: 2 },
-    { id: '3', content: 'Объект 3', x: 10, y: 110, isDragging: false, expanded: false, zIndex: 3 },
-    { id: '4', content: 'Объект 4', x: 10, y: 160, isDragging: false, expanded: false, zIndex: 4 },
+    
   ]);
 
   const isDragging = useRef(false);  // Ссылка на DOM-элемент, чтобы отслеживать, перетаскивается ли элемент
