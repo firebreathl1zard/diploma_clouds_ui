@@ -6,7 +6,7 @@ const Title = () => {
   useEffect(() => {
     const fetchTitle = async () => {
       try {
-        const response = await fetch('URL_ВАШЕГО_API'); 
+        const response = await fetch(''); 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

@@ -1,0 +1,41 @@
+export const modalStyles = {
+    overlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    modal: {
+      background: 'white',
+      padding: '20px',
+      borderRadius: '5px',
+      width: '400px',
+      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+    },
+    buttonContainer: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+    okButton: {
+      padding: '10px 15px',
+      backgroundColor: '#007bff',
+      color: 'white',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+    },
+    closeButton: {
+      position: 'absolute',
+      top: '10px',
+      left: '10px',
+      background: 'none',
+      border: 'none',
+      fontSize: '20px',
+      cursor: 'pointer',
+    },
+  };
