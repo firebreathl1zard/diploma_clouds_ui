@@ -8,7 +8,7 @@ const MachineSelection = () => {
   const { machines } = useFetchMachines();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [selectedVM, setSelectedVM] = useState(null); // Store selected VM
+  const [selectedVM, setSelectedVM] = useState(null); 
   const [sshKey, setSshKey] = useState('');
 
   const handleConfirm = (key) => {
@@ -25,7 +25,8 @@ const MachineSelection = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            vmId: selectedVM.id, 
+           // vmId: selectedVM.id, 
+           //vmConfigurationID: vmConfigurationID,
             sshKey: sshKey, 
           }),
         });
