@@ -5,7 +5,7 @@ import useFetchMachines from '../../../hooks/useFetchMachines';
 import { modalStyles } from './MachineSelection.styles';
 
 const MachineSelection = () => {
-  const { machines, loading } = useFetchMachines();
+  const { machines } = useFetchMachines();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedVM, setSelectedVM] = useState(null); // Store selected VM
@@ -19,14 +19,14 @@ const MachineSelection = () => {
   const handleFinalConfirm = async () => {
     if (selectedVM) {
       try {
-        const response = await fetch('http://your-backend-url/api/confirm', { // Replace with your actual backend URL
+        const response = await fetch('', { 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            vmId: selectedVM.id, // Send the selected VM's ID
-            sshKey: sshKey, // Optionally send the SSH key if needed
+            vmId: selectedVM.id, 
+            sshKey: sshKey, 
           }),
         });
 
@@ -56,7 +56,7 @@ const MachineSelection = () => {
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirm}
         vmConfigurations={machines}
-        setSelectedVM={setSelectedVM} // Pass setSelectedVM to Modal
+        setSelectedVM={setSelectedVM} 
       />
 
       <ConfirmationModal

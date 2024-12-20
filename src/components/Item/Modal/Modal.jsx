@@ -3,7 +3,24 @@ import { modalStyles } from './Modal.styles';
 
 const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) => {
   const [sshKey, setSshKey] = useState('');
-  const [selectedVM, setSelectedVMState] = useState(null); // State to track selected VM
+  const [selectedVM, setSelectedVMState] = useState(null); 
+  const [error, setError] = useState(''); 
+
+  const validateSshKey = (key) => {
+    
+    const sshKeyPattern = /^ssh-(rsa|dss|ed25519|ecdsa) [A-Za-z0-9+/=]+( .+)?$/;
+    return sshKeyPattern.test(key);
+  };
+
+  const handleConfirm = () => {
+    if (validateSshKey(sshKey)) {
+      setError(''); 
+      onConfirm(sshKey);
+      onClose();
+    } else {
+      setError('Неверный формат SSH ключа. Пожалуйста, проверьте и попробуйте снова.');
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -18,12 +35,12 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
             <div key={vm.id} style={modalStyles.vmItem}>
               <div
                 onClick={() => {
-                  setSelectedVMState(vm); // Set selected VM on click
-                  setSelectedVM(vm); // Update the parent state
+                  setSelectedVMState(vm); 
+                  setSelectedVM(vm);
                 }}
                 style={{
                   ...modalStyles.vmName,
-                  backgroundColor: selectedVM === vm ? '#e0f7fa' : 'transparent', // Highlight selected VM
+                  backgroundColor: selectedVM === vm ? '#e0f7fa' : 'transparent', 
                 }}
               >
                 {vm.id}. {vm.name}
@@ -32,7 +49,7 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
           ))}
         </div>
 
-        {/* Display selected VM characteristics */}
+        
         <div style={modalStyles.vmDetails}>
           <h4>Выбранная конфигурация: {selectedVM ? selectedVM.name : 'Не выбрана'}</h4>
           {selectedVM ? (
@@ -71,11 +88,10 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
           onChange={(e) => setSshKey(e.target.value)}
           style={modalStyles.input}
         />
+        {error && <p style={{ color: 'red' }}>{error}</p>} 
+
         <div style={modalStyles.buttonContainer}>
-          <button onClick={() => {
-            onConfirm(sshKey);
-            onClose();
-          }} style={modalStyles.okButton}>
+          <button onClick={handleConfirm} style={modalStyles.okButton}>
             ОК
           </button>
         </div>

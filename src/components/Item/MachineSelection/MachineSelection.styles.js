@@ -9,7 +9,7 @@ export const modalStyles = {
       alignItems: 'center',
       justifyContent: 'center',
       height: '150px',
-      width: '200px', // Adjust height as needed
+      width: '200px', 
     },
     addButton: {
       fontSize: '30px',
