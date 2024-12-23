@@ -19,7 +19,6 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
   const [investmentAmount, setInvestmentAmount] = useState('');
   const [selectedMachine, setSelectedMachine] = useState('');
   const [logs, setLogs] = useState([]);
-  const [title, setTitle] = useState('[Enter Title Here]');
   const [team, setTeam] = useState('[Enter Team Here]');
 
   const handleExpand = () => {
@@ -28,18 +27,6 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
   };
 
   useEffect(() => {
-    const fetchTitle = async () => {
-      try {
-        const response = await fetch(``);
-        const data = await response.json();
-        setTitle(data.title); 
-      } catch (error) {
-        console.error('Ошибка при получении названия:', error);
-      }
-    };
-
-    fetchTitle(); 
-    
     const handleMouseMove = (event) => {
       if (isDragging) {
         const { clientX, clientY } = event;
@@ -99,15 +86,15 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
             className="item-header"
             onDoubleClick={handleExpand}
           >
-            {item.content}
+            <p><abbr className='item-title' title={item.content}>{item.content}</abbr></p>
           </div>
           {isExpanded && (
             <div className="item-content">
               <div className="item-content-header">
-                <Title title={title} />
+                <Title title={item.content} />
                 <Metrics metrics={metrics} />
                 <div style={{ minWidth: '80px' }}>
-                  <Team team={team} /> 
+                  <Team project_id={item.id} /> {/* Передаем project_id в компонент Team */}
                 </div>
               </div>
               <div className="item-content-body">

@@ -81,6 +81,7 @@ const Board = ({ items, setItems, isDragging, listId }) => {
             width: '100%',
             border: '1px solid black',
             position: 'relative',
+            // zIndex: '-1',
           }}
         >
         
