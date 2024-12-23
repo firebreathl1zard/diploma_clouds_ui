@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import Board from '../components/Board';
 import Menu from '../components/Menu/Menu';
+import { MenuProvider } from '../hooks/Menu/MenuContext';
 
 const HomePages = () => {
   //Хранения элементов и их состояние
@@ -28,9 +29,12 @@ const HomePages = () => {
 
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
-      
+      <div>
+      <MenuProvider>
       <Menu/>
+      </MenuProvider>
       <Board items={items} setItems={setItems} isDragging={isDragging} />
+      </div>
     </DragDropContext>
   );
 };

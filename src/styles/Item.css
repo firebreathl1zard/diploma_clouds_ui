@@ -1,3 +1,4 @@
+
 .item {
     position: absolute;
     background-color: lightblue;
@@ -45,4 +46,14 @@
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
+  }
+  .item-title {
+    display: -webkit-box; /* Используем флекс-контейнер для обрезки */
+    -webkit-box-orient: vertical; /* Указываем ориентацию */
+    -webkit-line-clamp: 2; /* Количество строк, которые нужно отобразить */
+    overflow: hidden; /* Скрываем переполнение */
+    text-overflow: ellipsis; /* Добавляем троеточие */
+    white-space: normal; /* Позволяем перенос строк */
+    text-decoration: none;
+    /* width: 65px; */
   }

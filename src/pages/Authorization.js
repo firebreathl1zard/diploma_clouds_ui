@@ -12,7 +12,7 @@ function AuthorizationPages() {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://ivan.firebreathlizard.space:12000/api/v1/login', {
+      const response = await fetch('http://10.3.21.200:12000/api/v1/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
