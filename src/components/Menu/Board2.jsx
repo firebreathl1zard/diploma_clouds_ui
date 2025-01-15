@@ -1,9 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Item from '../Item';
 
-const Board = ({ items, setItems, isDragging }) => {
+const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, maxY }) => {
   const boardRef = useRef(null);
+  const [offsetY, setOffsetY] = useState(0);
 
   const handleItemDragStart = (item, event) => {
     const { clientX, clientY } = event;
@@ -24,23 +25,46 @@ const Board = ({ items, setItems, isDragging }) => {
   const handleItemDrag = (item, event) => {
     const { clientX, clientY } = event;
 
+    const isInsideGrid = item.x >= minX && item.x <= maxX && item.y >= minY && item.y <= maxY;
+
+    let snappedX, snappedY;
+
+    if (isInsideGrid) {
+      ({ snappedX, snappedY } = snapToGrid(clientX - 25, clientY - 25));
+    } else {
+      snappedX = clientX - 25;
+      snappedY = clientY - 25;
+    }
+
     const updatedItems = items.map((i) =>
       i.id === item.id
         ? {
             ...i,
-            x: clientX - 25, 
-            y: clientY - 25, 
+            x: snappedX,
+            y: snappedY,
             isDragging: true,
           }
         : i
     );
     setItems(updatedItems);
+
   };
 
   const handleItemDragEnd = (item) => {
+    const isInsideGrid = item.x >= minX && item.x <= maxX && item.y >= minY && item.y <= maxY;
+
+    let snappedX, snappedY;
+
+    if (isInsideGrid) {
+      ({ snappedX, snappedY } = snapToGrid(item.x, item.y));
+    } else {
+      snappedX = item.x;
+      snappedY = item.y;
+    }
+
     const updatedItems = items.map((i) =>
       i.id === item.id
-        ? { ...i, isDragging: false }
+        ? { ...i, x: snappedX, y: snappedY, isDragging: false }
         : i
     );
     setItems(updatedItems);
@@ -60,12 +84,11 @@ const Board = ({ items, setItems, isDragging }) => {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            minHeight: '700px',
-            width: '200px',
+            height: '700px', 
+            minWidth: '200px', 
             border: '1px solid black',
             position: 'absolute',
             zIndex: '1',
-            overflow: 'visible', // Убедитесь, что overflow не ограничивает видимость
           }}
         >
           {items.map((item, index) => (
@@ -86,4 +109,4 @@ const Board = ({ items, setItems, isDragging }) => {
   );
 };
 
-export default Board;
+export default Board2;

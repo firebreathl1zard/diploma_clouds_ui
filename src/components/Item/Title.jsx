@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 
 const Title = () => {
@@ -20,6 +21,8 @@ const Title = () => {
     fetchTitle();
   }, []);
 
+
+const Title = ({ title }) => {
   return (
     <div
       style={{
@@ -32,7 +35,7 @@ const Title = () => {
         wordWrap: 'break-word',
       }}
     >
-      {title}
+      <p>{title}</p>
     </div>
   );
 };

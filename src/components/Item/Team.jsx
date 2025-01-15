@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
 
-const Team = () => {
-  const [team, setTeam] = useState('');
+const Team = ({ project_id }) => {
+  const [team, setTeam] = useState([]);
 
   useEffect(() => {
     const fetchTeam = async () => {
       try {
+
         const response = await fetch(''); 
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setTeam(data.team); 
+        setTeam(data.users); // Предполагаем, что данные о пользователях находятся в поле "users"
       } catch (error) {
         console.error('Ошибка при получении данных:', error);
       }
     };
 
     fetchTeam();
-  }, []);
+  }, [project_id]); // Добавляем project_id в зависимости
 
   return (
     <div
@@ -32,7 +34,16 @@ const Team = () => {
         wordWrap: 'break-word',
       }}
     >
-      {team}
+      {team.length > 0 ? (
+        team.map(user => (
+          <div key={user.user_id}>
+            <span>{`${user.f_name} `}</span>
+            {/* <span>{`${user.f_name} ${user.l_name}`}</span> */}
+          </div>
+        ))
+      ) : (
+        <p>Команда не найдена</p>
+      )}
     </div>
   );
 };
