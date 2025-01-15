@@ -19,15 +19,14 @@ const MachineSelection = () => {
   const handleFinalConfirm = async () => {
     if (selectedVM) {
       try {
-        const response = await fetch('', { 
+        const response = await fetch('http://ivan.firebreathlizard.space:12000/api/v1/vm/create', { 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-           // vmId: selectedVM.id, 
-           //vmConfigurationID: vmConfigurationID,
-            sshKey: sshKey, 
+            vmConfigurationID: String(selectedVM.id), 
+            projectID: String(285),
           }),
         });
 

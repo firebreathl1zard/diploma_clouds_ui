@@ -7,8 +7,10 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
   return (
     <div style={modalStyles.overlay}>
       <div style={modalStyles.modal}>
-        <button style={modalStyles.closeButton} onClick={onClose}>✖</button>
-        <h2>Подтверждение</h2>
+        <div style={modalStyles.header}>
+          <h2>Подтверждение</h2>
+          <button style={modalStyles.closeButton} onClick={onClose}>✖</button>
+        </div>
         <p>Вы уверены, что хотите подтвердить?</p>
         <div style={modalStyles.buttonContainer}>
           <button onClick={() => {

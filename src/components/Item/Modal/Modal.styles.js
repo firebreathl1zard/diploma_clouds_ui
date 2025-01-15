@@ -10,6 +10,12 @@ export const modalStyles = {
       alignItems: 'center',
       justifyContent: 'center',
     },
+    header: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '10px',
+    },
     modal: {
       background: 'white',
       padding: '20px',
@@ -98,12 +104,12 @@ export const modalStyles = {
       transition: 'opacity 0.3s',
     },
     closeButton: {
-      position: 'absolute',
+      position: 'flex',
       top: '10px',
       left: '10px',
-      background: 'none',
-      border: 'none',
-      fontSize: '20px',
       cursor: 'pointer',
+      border: 'none',
+      background: 'none',
+      fontSize: '20px',
     },
   };
