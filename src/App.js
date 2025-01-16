@@ -4,6 +4,7 @@ import { HomePages } from './pages/Home';
 import {AuthorizationPages} from './pages/Authorization';
 
 
+
 function App() {
   return (
     <BrowserRouter>

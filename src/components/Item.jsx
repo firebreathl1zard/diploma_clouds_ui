@@ -6,7 +6,7 @@ import Title from './Item/Title';
 import Team from './Item/Team';
 import Investment from './Item/Investment';
 import Metrics from './Item/Metrics';
-import MachineSelection from './Item/MachineSelection';
+import MachineSelection from './Item/MachineSelection/MachineSelection';
 import PaymentButton from './Item/PaymentButton';
 import Logs from './Item/Logs';
 

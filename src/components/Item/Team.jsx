@@ -6,7 +6,9 @@ const Team = ({ project_id }) => {
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-        const response = await fetch(`http://10.3.21.200:12000/api/v1/project/${project_id}/team`); 
+
+        const response = await fetch(''); 
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

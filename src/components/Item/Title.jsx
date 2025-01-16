@@ -1,4 +1,26 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
+
+const Title = () => {
+  const [title, setTitle] = useState('');
+
+  useEffect(() => {
+    const fetchTitle = async () => {
+      try {
+        const response = await fetch(''); 
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setTitle(data.title); 
+      } catch (error) {
+        console.error('Ошибка при получении данных:', error);
+      }
+    };
+
+    fetchTitle();
+  }, []);
+
 
 const Title = ({ title }) => {
   return (
