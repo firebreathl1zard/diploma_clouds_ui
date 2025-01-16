@@ -4,6 +4,7 @@ import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import useFetchMachines from '../../../hooks/useFetchMachines';
 import { modalStyles } from './MachineSelection.styles';
 
+
 const MachineSelection = ({ project_id }) => {
   console.log('Project ID:', project_id);
   const { machines } = useFetchMachines();
@@ -27,7 +28,9 @@ const MachineSelection = ({ project_id }) => {
           },
           body: JSON.stringify({
             vmConfigurationID: String(selectedVM.id), 
+
             projectID: String(project_id),
+
           }),
         });
 

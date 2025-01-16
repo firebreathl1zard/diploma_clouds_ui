@@ -4,7 +4,7 @@ const Investment = ({ investmentAmount }) => {
   useEffect(() => {
     const fetchInvestmentData = async () => {
       try {
-        const response = await fetch(`https://api.example.com/investment?amount=${investmentAmount}`);
+        const response = await fetch(``);
         const data = await response.json();
         console.log(data);
       } catch (error) {

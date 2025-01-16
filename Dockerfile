@@ -1,5 +1,5 @@
-FROM node:18.19.0
 
+FROM node:18.19.0
 EXPOSE 3000
 WORKDIR /app
 
