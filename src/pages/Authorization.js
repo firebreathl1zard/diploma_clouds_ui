@@ -12,7 +12,9 @@ function AuthorizationPages() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      // Если токен существует, перенаправляем на домашнюю страницу
+
+      
+
       navigate('/home');
     }
   }, [navigate]);

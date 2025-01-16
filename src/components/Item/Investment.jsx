@@ -6,7 +6,7 @@ const Investment = ({ investmentAmount }) => {
       try {
         const response = await fetch(``);
         const data = await response.json();
-        console.log(data); // Обработка данных
+        console.log(data);
       } catch (error) {
         console.error('Ошибка при получении данных:', error);
       }

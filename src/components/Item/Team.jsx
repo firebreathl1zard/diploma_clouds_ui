@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../../styles/Item.css'
 
 const Team = ({ project_id }) => {
   const [team, setTeam] = useState([]);
@@ -13,14 +14,14 @@ const Team = ({ project_id }) => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setTeam(data.users); // Предполагаем, что данные о пользователях находятся в поле "users"
+        setTeam(data.users);
       } catch (error) {
         console.error('Ошибка при получении данных:', error);
       }
     };
 
     fetchTeam();
-  }, [project_id]); // Добавляем project_id в зависимости
+  }, [project_id]);
 
   return (
     <div
@@ -37,7 +38,7 @@ const Team = ({ project_id }) => {
       {team.length > 0 ? (
         team.map(user => (
           <div key={user.user_id}>
-            <span>{`${user.f_name} `}</span>
+            <span><p ><abbr className='team' title={user.f_name}>{`${user.f_name} `}</abbr></p></span>
             {/* <span>{`${user.f_name} ${user.l_name}`}</span> */}
           </div>
         ))

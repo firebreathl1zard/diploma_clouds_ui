@@ -1,5 +1,3 @@
-
-
 export const saveToken = (token) => {
     localStorage.setItem('token', token);
   };
@@ -14,6 +12,5 @@ export const saveToken = (token) => {
   
   export const isAuthenticated = () => {
     const token = getToken();
-    // Здесь можно добавить проверку на срок действия токена, если это необходимо
     return !!token;
   };

@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../../styles/menu_style.css'; 
 import { DragDropContext } from 'react-beautiful-dnd';
-import { useMenuItems } from '../../hooks/Menu/MenuContext'; // Импортируйте ваш контекст
+import { useMenuItems } from '../../hooks/Menu/MenuContext'; 
 import Board2 from './Board2';
 
 const Menu = () => {
-  const items = useMenuItems(); // Получите itemes из контекста
-  const [localItems, setLocalItems] = useState(items); // Локальное состояние для управления перетаскиванием
+  const items = useMenuItems(); 
+  const [localItems, setLocalItems] = useState(items); 
 
   const isDragging = useRef(false);  
   const gridWidth = 200; 
@@ -16,10 +16,10 @@ const Menu = () => {
   const minY = 0; 
   const maxY = 650; 
 
-  // Обновляем локальное состояние при изменении items из контекста
+  
   useEffect(() => {
     setLocalItems(items);
-  }, [items]); // Зависимость от items
+  }, [items]); 
 
   const snapToGrid = (x, y) => {
     const snappedX = Math.max(minX, Math.min(maxX, Math.round(x / gridWidth) * gridWidth));

@@ -38,3 +38,14 @@ git branch --delete feature/auth-page - удалит локально
 ###    backend
     golang
 
+
+
+## docker
+###  для докера
+```
+docker build -t IMAGENAME:TAG .
+docker run -d --name NAME -p 3000:3000 --restart always IMAGENAME:TAG
+docker stop NAME 
+docker rm NAME
+docker ps -a
+```

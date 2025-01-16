@@ -32,6 +32,13 @@ const HomePages = () => {
     window.location.href = '/'; // или используйте react-router для навигации
   };
 
+  const handleLogout = () => {
+    // Здесь вы можете добавить логику выхода, например, очистка токена и редирект на страницу входа
+    console.log("User  logged out");
+    localStorage.removeItem('token');
+    window.location.href = '/'; // или используйте react-router для навигации
+  };
+
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
 
@@ -41,6 +48,7 @@ const HomePages = () => {
         Выйти
       </button>
 
+      </div>
     </DragDropContext>
   );
 };
