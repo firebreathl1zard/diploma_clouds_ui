@@ -27,6 +27,13 @@ const HomePages = () => {
     setItems(itemsCopy);   //Обновляет состояние
   };
 
+  const handleLogout = () => {
+    // Здесь вы можете добавить логику выхода, например, очистка токена и редирект на страницу входа
+    console.log("User  logged out");
+    localStorage.removeItem('token');
+    window.location.href = '/'; // или используйте react-router для навигации
+  };
+
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div>
@@ -34,6 +41,9 @@ const HomePages = () => {
       <Menu/>
       </MenuProvider>
       <Board items={items} setItems={setItems} isDragging={isDragging} />
+      <button onClick={handleLogout} style={{ marginTop: '20px' }}>
+        Выйти
+      </button>
       </div>
     </DragDropContext>
   );

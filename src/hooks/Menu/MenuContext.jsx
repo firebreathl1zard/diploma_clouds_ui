@@ -26,23 +26,22 @@ export const MenuProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // Первоначальный вызов для получения данных
+
     fetchItems();
 
-    // Устанавливаем интервал для периодического обновления данных
-    const intervalId = setInterval(fetchItems, 60000); // 60000 мс = 1 минута
+    
+    const intervalId = setInterval(fetchItems, 60000); 
 
-    // Очистка интервала при размонтировании компонента
+    
     return () => clearInterval(intervalId);
-  }, []); // Пустой массив зависимостей, чтобы выполнить эффект только один раз при монтировании
-
+  }, []); 
   return (
     <MenuContext.Provider value={itemes}>
       {children}
     </MenuContext.Provider>
   );
 };
-
+// useSelector(state => state.menuItems.items)
 export const useMenuItems = () => {
   return useContext(MenuContext);
 };

@@ -6,9 +6,10 @@ import Title from './Item/Title';
 import Team from './Item/Team';
 import Investment from './Item/Investment';
 import Metrics from './Item/Metrics';
-import MachineSelection from './Item/MachineSelection';
+import MachineSelection from './Item/MachineSelection/MachineSelection';
 import PaymentButton from './Item/PaymentButton';
 import Logs from './Item/Logs';
+import VirtualMachines from './Item/VirtualMachines';
 
 const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemDoubleClick }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -56,7 +57,7 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
     const newLog = {
       dateTime: new Date().toLocaleString(),
       status: 'Завершено',
-      user: 'Пользователь 1', // Замените на фактического пользователя
+      user: 'Пользователь 1', 
       description: `Инвестировано ${investmentAmount} в ${selectedMachine}`,
     };
     setLogs([...logs, newLog]);
@@ -91,15 +92,16 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
           {isExpanded && (
             <div className="item-content">
               <div className="item-content-header">
-                <Title title={item.content} />
                 <Metrics metrics={metrics} />
                 <div style={{ minWidth: '80px' }}>
-                  <Team project_id={item.id} /> {/* Передаем project_id в компонент Team */}
+                  <Team project_id={item.id} />
                 </div>
               </div>
               <div className="item-content-body">
-                <MachineSelection selectedMachine={selectedMachine} setSelectedMachine={setSelectedMachine} />
+                {/* <MachineSelection selectedMachine={selectedMachine} setSelectedMachine={setSelectedMachine} /> */}
+                <VirtualMachines projectId={item.id} /> 
                 <Investment investmentAmount={investmentAmount} setInvestmentAmount={setInvestmentAmount} />
+                
               </div>
               <Logs logs={logs} />
             </div>
