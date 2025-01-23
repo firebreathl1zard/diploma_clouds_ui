@@ -8,7 +8,7 @@ const useFetchMachines = () => {
   useEffect(() => {
     const fetchMachines = async () => {
       try {
-        const response = await fetch('http://ivan.firebreathlizard.space:12000/api/v1/vm/confs');
+        const response = await fetch('http://ivan.firebreathlizard.space:8000/api/v1/vm/confs');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
