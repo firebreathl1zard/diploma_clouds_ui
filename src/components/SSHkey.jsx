@@ -1,85 +1,123 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/SSHkey.css';
+import Modalssh from './ModalSsh/Modalssh';
 
 const SSHkey = () => {
     const [sshKeys, setSshKeys] = useState([]);
     const [keyName, setKeyName] = useState('');
     const [sshKey, setSshKey] = useState('');
-    const [showInputs, setShowInputs] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [username, setUsername] = useState('');
 
-    
     useEffect(() => {
-        const storedKeys = JSON.parse(localStorage.getItem('sshKeys')) || [];
-        setSshKeys(storedKeys);
+        const storedUsername = localStorage.getItem('username');
+        if (storedUsername) {
+            setUsername(storedUsername);
+        }
     }, []);
 
-    
-    useEffect(() => {
-        localStorage.setItem('sshKeys', JSON.stringify(sshKeys));
-    }, [sshKeys]);
-
-    const validateSSHKey = (key) => {
-        
-        const regex = /^(ssh-rsa|ssh-ed25519) [A-Za-z0-9+/=]+( [^\s]+)?$/;
-        return regex.test(key);
+    const fetchSshKeys = async () => {
+        if (username) {
+            try {
+                const response = await fetch(`http://ivan.firebreathlizard.space:8000/api/v1/sshkeys?login=${username}`);
+                if (!response.ok) {
+                    throw new Error('Ошибка при получении SSH ключей');
+                }
+                const data = await response.json();
+                
+                if (data && Array.isArray(data.user_ssh_keys)) {
+                    setSshKeys(data.user_ssh_keys);
+                } else {
+                    console.error('Полученные данные не содержат массив user_ssh_keys:', data);
+                    setSshKeys([]);
+                }
+            } catch (error) {
+                console.error('Ошибка при получении SSH ключей:', error.message);
+                alert('Не удалось получить SSH ключи. Пожалуйста, проверьте соединение с сервером.');
+            }
+        }
     };
 
-    const handleSaveKey = () => {
+    useEffect(() => {
+        fetchSshKeys();
+    }, [username]);
+
+    const validateSSHKey = (key) => {
+        const trimmedKey = key.trim();
+        const regex = /^(ssh-(rsa|dss|ed25519|ecdsa-sha2-nistp(256|384|521)|rsa-cert-v01@openssh.com|ed25519-cert-v01@openssh.com|ecdsa-sha2-nistp(256|384|521)-cert-v01@openssh.com)) ([A-Za-z0-9+/=]+) ?(.*)?$/;
+
+        return regex.test(trimmedKey);
+    };
+
+    const handleSendKey = async () => {
+        if (!username) {
+            alert('Пожалуйста, войдите в систему, чтобы отправить SSH ключ.');
+            return;
+        }
+
         if (validateSSHKey(sshKey)) {
-            const newKey = {
-                name: keyName,
-                key: sshKey,
-                createdAt: new Date().toLocaleString(),
-            };
-            setSshKeys((prevKeys) => [...prevKeys, newKey]);
-            setKeyName('');
-            setSshKey('');
+            try {
+                const response = await fetch('http://ivan.firebreathlizard.space:8000/api/v1/sshkey/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_login: username,
+                        ssh_key: sshKey,
+                        title: keyName
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Ошибка: ${response.status} ${errorData.message || response.statusText}`);
+                }
+
+                // После успешной отправки, запрашиваем SSH ключи
+                setKeyName('');
+                setSshKey('');
+                await fetchSshKeys(); // Обновляем список ключей
+
+            } catch (error) {
+                console.error('Ошибка при отправке SSH ключа:', error.message);
+                alert('Не удалось отправить SSH ключ. Пожалуйста, проверьте соединение с сервером.');
+            }
         } else {
             alert('Неверный SSH ключ. Пожалуйста, проверьте его.');
         }
     };
 
-    const handleDeleteKey = (index) => {
-        const updatedKeys = sshKeys.filter((_, i) => i !== index);
-        setSshKeys(updatedKeys);
+    const openModal = () => {
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+        setKeyName('');
+        setSshKey('');
+    };
+
+    const addNewKey = (newKey) => {
+        setSshKeys(prevKeys => [...prevKeys, { title: 'Новый ключ', ssh_key: newKey }]);
     };
 
     return (
         <div className="ssh-container">
-            <button className="toggle-inputs-btn" onClick={() => setShowInputs(!showInputs)}>
-                SSH ключ
+            <button className="toggle-inputs-btn" onClick={openModal}>
+                Показать SSH ключи
             </button>
-            {showInputs && (
-                <div className="input-container">
-                    <div className="input-fields">
-                        <input
-                            type="text"
-                            value={keyName}
-                            onChange={(e) => setKeyName(e.target.value)}
-                            placeholder="Имя SSH ключа"
-                        />
-                        <textarea
-                            value={sshKey}
-                            onChange={(e) => setSshKey(e.target.value)}
-                            placeholder="Введите SSH ключ"
-                            rows="4"
-                        />
-                    </div>
-                    <button className="save-key-btn" onClick={handleSaveKey}>Сохранить ключ</button>
-                </div>
-            )}
-            <div className="ssh-keys-list">
-                {sshKeys.map((key, index) => (
-                    <div key={index} className="ssh-key-block">
-                        <span>
-                            {key.name} <span className="key-icon">🔑</span>
-                        </span>
-                        <span>{key.key}</span>
-                        <span>{key.createdAt}</span>
-                        <button className="delete-key-btn" onClick={() => handleDeleteKey(index)}>Удалить</button>
-                    </div>
-                ))}
-            </div>
+            <Modalssh
+                isOpen={showModal} 
+                onClose={closeModal} 
+                sshKeys={sshKeys}
+                onAddKey={addNewKey}
+                keyName={keyName}
+                setKeyName={setKeyName}
+                sshKey={sshKey}
+                setSshKey={setSshKey}
+                handleSendKey={handleSendKey}
+            />
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import Profile from '../components/Profile';
 import '../styles/HomePages.css'
 import SSHkey from '../components/SSHkey';
@@ -16,4 +16,4 @@ const Settings = () => {
   );
 };
 
-export { Settings };
+export { Settings }; */
