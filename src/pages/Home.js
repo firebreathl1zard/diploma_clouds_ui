@@ -25,14 +25,23 @@ const HomePages = () => {
   };
 
 
+  const handleLogout = () => {
+    // Здесь вы можете добавить логику выхода, например, очистка токена и редирект на страницу входа
+    console.log("User  logged out");
+    localStorage.removeItem('token');
+    window.location.href = '/'; // или используйте react-router для навигации
+  };
+
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <MenuProvider>
         <Menu />
       </MenuProvider>
       <Board items={items} setItems={setItems} isDragging={isDragging} />
+
       <div className="profile-container">
         <Profile />
+
       </div>
     </DragDropContext>
   );

@@ -22,7 +22,7 @@ const Board = ({ items, setItems, isDragging, listId }) => {
 
     setItems(updatedItems);
 
-    isDragging.current = true; // Устанавливаем флаг перетаскивания
+    isDragging.current = true; 
 
   };
 
@@ -53,7 +53,7 @@ const Board = ({ items, setItems, isDragging, listId }) => {
         : i
     );
 
-    // Устанавливаем z-index для перетаскиваемого элемента
+  
     const maxZIndex = Math.max(...updatedItems.map(i => i.zIndex || 0));
     const updatedItemsWithZIndex = updatedItems.map((i) => ({
       ...i,
