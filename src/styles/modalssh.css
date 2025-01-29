@@ -1,0 +1,47 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 600px; /* Ограничение ширины модального окна */
+    width: 100%; /* Ширина 100% от родителя */
+    overflow: auto; /* Добавьте прокрутку, если содержимое превышает высоту */
+    max-height: 80vh; /* Ограничение высоты модального окна */
+}
+
+.ssh-keys-list {
+    margin-top: 20px; /* Отступ сверху для списка ключей */
+}
+
+.ssh-key-block {
+    border: 1px solid #ccc; /* Граница вокруг каждого ключа */
+    border-radius: 5px; /* Закругление углов */
+    padding: 10px; /* Отступ внутри блока */
+    margin-bottom: 10px; /* Отступ между блоками ключей */
+    background-color: #f9f9f9; /* Цвет фона для блока ключа */
+}
+
+.ssh-key-title {
+    font-weight: bold; /* Сделать имя ключа жирным */
+    font-size: 1.1em; /* Увеличить размер шрифта для имени ключа */
+    color: #333; /* Цвет текста для имени ключа */
+}
+
+.ssh-key-value {
+    white-space: pre-wrap; /* Сохранить пробелы и переносы строк */
+    color: #555; /* Цвет текста для значения ключа */
+    overflow-wrap: break-word; /* Перенос длинных слов на новую строку */
+    word-wrap: break-word; /* Для старых браузеров */
+    max-width: 100%; /* Ограничение ширины текста */
+}

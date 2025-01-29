@@ -23,7 +23,7 @@ function AuthorizationPages() {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://10.3.21.200:12000/api/v1/login', {
+      const response = await fetch('http://10.3.21.200:8000/api/v1/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,8 +39,9 @@ function AuthorizationPages() {
       const data = await response.json();
       console.log(data);
 
-      // Сохранение токена в localStorage
+     
       localStorage.setItem('token', data.token);
+      localStorage.setItem('username', username);
 
       setSuccessMessage('Успешная авторизация!');
       setError(''); 

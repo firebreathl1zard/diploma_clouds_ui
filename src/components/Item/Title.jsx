@@ -39,5 +39,5 @@ const Title = ({ title }) => {
     </div>
   );
 };
-
+};
 export default Title;
