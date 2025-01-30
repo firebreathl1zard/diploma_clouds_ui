@@ -9,7 +9,7 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
       onConfirm(selectedVM);
       onClose();
     } else {
-      alert('Пожалуйста, выберите конфигурацию ВМ.'); // Simple alert for user feedback
+      alert('Пожалуйста, выберите конфигурацию ВМ.'); 
     }
   };
 

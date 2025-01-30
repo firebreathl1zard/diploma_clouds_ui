@@ -14,34 +14,34 @@
     background: white;
     padding: 20px;
     border-radius: 5px;
-    max-width: 600px; /* Ограничение ширины модального окна */
-    width: 100%; /* Ширина 100% от родителя */
-    overflow: auto; /* Добавьте прокрутку, если содержимое превышает высоту */
-    max-height: 80vh; /* Ограничение высоты модального окна */
+    max-width: 700px; 
+    width: 100%; 
+    overflow: auto; 
+    max-height: 80vh; 
 }
 
 .ssh-keys-list {
-    margin-top: 20px; /* Отступ сверху для списка ключей */
+    margin-top: 20px; 
 }
 
 .ssh-key-block {
-    border: 1px solid #ccc; /* Граница вокруг каждого ключа */
-    border-radius: 5px; /* Закругление углов */
-    padding: 10px; /* Отступ внутри блока */
-    margin-bottom: 10px; /* Отступ между блоками ключей */
-    background-color: #f9f9f9; /* Цвет фона для блока ключа */
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    padding: 10px; 
+    margin-bottom: 10px; 
+    background-color: #f9f9f9; 
 }
 
 .ssh-key-title {
-    font-weight: bold; /* Сделать имя ключа жирным */
-    font-size: 1.1em; /* Увеличить размер шрифта для имени ключа */
-    color: #333; /* Цвет текста для имени ключа */
+    font-weight: bold; 
+    font-size: 1.1em; 
+    color: #333; 
 }
 
 .ssh-key-value {
-    white-space: pre-wrap; /* Сохранить пробелы и переносы строк */
-    color: #555; /* Цвет текста для значения ключа */
-    overflow-wrap: break-word; /* Перенос длинных слов на новую строку */
-    word-wrap: break-word; /* Для старых браузеров */
-    max-width: 100%; /* Ограничение ширины текста */
+    white-space: pre-wrap; 
+    color: #555; 
+    overflow-wrap: break-word; 
+    word-wrap: break-word; 
+    max-width: 100%; 
 }

@@ -4,8 +4,7 @@ import Board from '../components/Board';
 import Menu from '../components/Menu/Menu';
 import { MenuProvider } from '../hooks/Menu/MenuContext';
 import Profile from '../components/Profile';
-import '../styles/HomePages.css'; // Импортируйте файл стилей
-
+import '../styles/HomePages.css'; 
 const HomePages = () => {
   const [items, setItems] = useState([]);
   const isDragging = useRef(false);
@@ -26,10 +25,10 @@ const HomePages = () => {
 
 
   const handleLogout = () => {
-    // Здесь вы можете добавить логику выхода, например, очистка токена и редирект на страницу входа
+    
     console.log("User  logged out");
     localStorage.removeItem('token');
-    window.location.href = '/'; // или используйте react-router для навигации
+    window.location.href = '/'; 
   };
 
   return (

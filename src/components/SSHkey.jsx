@@ -74,10 +74,10 @@ const SSHkey = () => {
                     throw new Error(`Ошибка: ${response.status} ${errorData.message || response.statusText}`);
                 }
 
-                // После успешной отправки, запрашиваем SSH ключи
+                
                 setKeyName('');
                 setSshKey('');
-                await fetchSshKeys(); // Обновляем список ключей
+                await fetchSshKeys(); 
 
             } catch (error) {
                 console.error('Ошибка при отправке SSH ключа:', error.message);

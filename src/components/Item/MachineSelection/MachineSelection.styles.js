@@ -2,14 +2,15 @@ export const modalStyles = {
     addButtonContainer: {
       border: '1px solid #333',
       borderRadius: '5px',
-      padding: '20px',
+      padding: '10px',
       position: 'relative',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       height: '150px',
-      width: '200px', 
+      width: '160px', 
+      
     },
     addButton: {
       fontSize: '30px',

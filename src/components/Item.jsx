@@ -98,10 +98,10 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
                 </div>
               </div>
               <div className="item-content-body">
-                {/* <MachineSelection selectedMachine={selectedMachine} setSelectedMachine={setSelectedMachine} /> */}
-                <VirtualMachines projectId={item.id} /> 
+                <div className="machine-selection-container">
+                  <VirtualMachines projectId={item.id} /> 
+                </div>
                 <Investment investmentAmount={investmentAmount} setInvestmentAmount={setInvestmentAmount} />
-                
               </div>
               <Logs logs={logs} />
             </div>
