@@ -12,12 +12,12 @@ import '../../styles/Vmdisplay.css';
 const VirtualMachines = ({ projectId }) => {
   const [vms, setVms] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState({}); 
+  const [selectedPurpose, setSelectedPurpose] = useState('');
 
   useEffect(() => {
     const fetchVms = async () => {
       try {
-        const response = await fetch(`http://ivan.firebreathlizard.space:8000/api/v1/project/${projectId}/vms`);
+        const response = await fetch(`http://10.3.21.200:8000/api/v1/project/${projectId}/vms`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -42,43 +42,22 @@ const VirtualMachines = ({ projectId }) => {
 
   return (
     <div className="vms-container">
-      <div className="machine-selection-container">
-        <MachineSelection project_id={projectId} />
-      </div>
-      <div className="vms-list">
-        {vms.length > 0 ? (
-          vms.map(vm => (
-            <div className="vm-item">
-              <div className="vm-header">
-                <p>BE/FE</p>
-                <SettingsButton/>
-              </div> 
-              {vm.configuration.map((config, index) => (
-                <div key={index}>
-                  <p>CPU: {config.cpu}</p>
-                  <div className="load-box" style={{ width: `${config.cpuLoad}%` }}>
-                    <span>{config.cpuLoad}%</span>
-                  </div>
-                  <p>RAM: {config.ram}</p>
-                  <div className="load-box" style={{ width: `${config.ramLoad}%` }}>
-                    <span>{config.ramLoad}%</span>
-                  </div>
-                </div>
-              ))}
-              <div className="action-buttons">
-                <StartButton />
-                <ShutdownButton />
-                <StopButton />
-                <RebootButton />
-                <ResetButton />
-                <DestroyButton />
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No virtual machines available.</p>
-        )}
-      </div>
+      {vms.length > 0 ? (
+        vms.map(vm => (
+          <div key={vm.vm_identifier} className="vm-item">
+            <p>VM ID: {vm.vm_identifier}</p>
+            <p>IP Address: {vm.vm_ip_address}</p>
+            <p>Status: {vm.status}</p>
+            <p>Purpose: {vm.vm_purpose}</p>
+            {vm.configuration.map((config, index) => (
+              <p key={index}>CPU: {config.cpu}, RAM: {config.ram} GB</p>
+            ))}
+          </div>
+        ))
+      ) : (
+        <MachineSelection project_id={projectId} onPurposeSelect={setSelectedPurpose} />
+      )}
+      {selectedPurpose && <p>Выбранное назначение: {selectedPurpose}</p>} 
     </div>
   );
 };

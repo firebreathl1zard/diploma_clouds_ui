@@ -1,11 +1,42 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Item from './Item';
 
+const Board = ({ items, setItems, isDragging, boardOccupiedSpace, setBoardOccupiedSpace, boardRef}) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [size, setSize] = useState({ width: 0, height: 0 });
 
-const Board = ({ items, setItems, isDragging, listId }) => {
+  const updatePositionAndSize = () => {
+    if (boardRef.current) {
+      const rect = boardRef.current.getBoundingClientRect();
+      setPosition({ x: rect.left, y: rect.top });
+      setSize({ width: rect.width, height: rect.height });
+    }
+  };
 
-  const boardRef = useRef(null);
+
+  const calculateBoardOccupiedSpace = () => {
+    const xStart = position.x;
+    const xEnd = position.x + size.width;
+    const yStart = position.y;
+    const yEnd = position.y + size.height;
+
+    setBoardOccupiedSpace({ xStart, xEnd, yStart, yEnd });
+  };
+
+  useLayoutEffect(() => {
+    updatePositionAndSize(); 
+    calculateBoardOccupiedSpace(); 
+    window.addEventListener('resize', updatePositionAndSize); 
+
+    return () => {
+      window.removeEventListener('resize', updatePositionAndSize); 
+    };
+  }, [items]);
+
+  useEffect(() => {
+    calculateBoardOccupiedSpace();
+  }, [items, position, size]);
 
   const handleItemDragStart = (item, event) => {
     const { clientX, clientY } = event;
@@ -13,32 +44,25 @@ const Board = ({ items, setItems, isDragging, listId }) => {
       i.id === item.id
         ? {
             ...i,
-            x: clientX - 25,
-            y: clientY - 25,
+            x: clientX - 250,
+            y: clientY - 30,
             isDragging: true,
           }
         : i
     );
 
     setItems(updatedItems);
-
-    isDragging.current = true; 
-
+    isDragging.current = true;
   };
 
   const handleItemDrag = (item, event) => {
     const { clientX, clientY } = event;
-    const boardRect = boardRef.current.getBoundingClientRect();
-
-    const newX = Math.max(0, Math.min(clientX - boardRect.left - 25, boardRect.width - 50));
-    const newY = Math.max(0, Math.min(clientY - boardRect.top - 25, boardRect.height - 50));
-
     const updatedItems = items.map((i) =>
       i.id === item.id
         ? {
             ...i,
-            x: newX,
-            y: newY,
+            x: clientX - 25,
+            y: clientY - 25,
             isDragging: true,
           }
         : i
@@ -53,14 +77,7 @@ const Board = ({ items, setItems, isDragging, listId }) => {
         : i
     );
 
-  
-    const maxZIndex = Math.max(...updatedItems.map(i => i.zIndex || 0));
-    const updatedItemsWithZIndex = updatedItems.map((i) => ({
-      ...i,
-      zIndex: i.id === item.id ? maxZIndex + 1 : (i.zIndex || 0),
-    }));
-
-    setItems(updatedItemsWithZIndex);
+    setItems(updatedItems);
     isDragging.current = false;
   };
 
@@ -80,20 +97,24 @@ const Board = ({ items, setItems, isDragging, listId }) => {
             minHeight: '700px',
             width: '100%',
             border: '1px solid black',
+            // zIndex: '1',
             position: 'relative',
-            // zIndex: '-1',
           }}
         >
-        
+          {/* <div>
+            <p>Board Position: X: {position.x}, Y: {position.y}</p>
+            <p>Board Size: Width: {size.width}, Height: {size.height}</p>
+            <p>Board Occupied Space: X: {boardOccupiedSpace.xStart} to {boardOccupiedSpace.xEnd}, Y: {boardOccupiedSpace.yStart} to {boardOccupiedSpace.yEnd}</p>
+          </div> */}
           {items.map((item, index) => (
             <Item
               key={item.id}
               item={item}
               index={index}
-              onDragStart={handleItemDragStart}
-              onDrag={handleItemDrag}
-              onDragEnd={handleItemDragEnd}
-              onDoubleClick={handleItemDoubleClick}
+              handleItemDragStart={handleItemDragStart}
+              handleItemDrag={handleItemDrag}
+              handleItemDragEnd={handleItemDragEnd}
+              handleItemDoubleClick={handleItemDoubleClick}
             />
           ))}
           {provided.placeholder}

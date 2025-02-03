@@ -4,33 +4,33 @@ import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import useFetchMachines from '../../../hooks/useFetchMachines';
 import { modalStyles } from './MachineSelection.styles';
 
-
-const MachineSelection = ({ project_id }) => {
-  console.log('Project ID:', project_id);
-  const { machines } = useFetchMachines();
+const MachineSelection = ({ project_id, onPurposeSelect }) => {
+  const { machines = [] } = useFetchMachines();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedVM, setSelectedVM] = useState(null); 
-  const [sshKey, setSshKey] = useState('');
+  const [purpose, setPurpose] = useState('');
 
-  const handleConfirm = (key) => {
-    setSshKey(key);
+  const handleConfirm = ({ vm, purpose }) => {
+    console.log('Selected Purpose:', purpose); 
+    setSelectedVM(vm);
+    setPurpose(purpose);
+    onPurposeSelect(purpose); 
     setIsConfirmModalOpen(true);
   };
 
   const handleFinalConfirm = async () => {
     if (selectedVM) {
       try {
-        const response = await fetch('http://ivan.firebreathlizard.space:8000/api/v1/vm/create', { 
+        const response = await fetch('http://10.3.21.200:8000/api/v1/vm/create', { 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             vmConfigurationID: String(selectedVM.id), 
-
             projectID: String(project_id),
-
+            purpose: purpose, 
           }),
         });
 

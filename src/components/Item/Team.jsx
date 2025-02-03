@@ -2,20 +2,21 @@ import React, { useEffect, useState } from 'react';
 import '../../styles/Item.css'
 
 const Team = ({ project_id }) => {
-  const [team, setTeam] = useState([]);
+  const [team, setTeam] = useState([]); 
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-
-        const response = await fetch(''); 
+        const response = await fetch(`http://10.3.21.200:8000/api/v1/project/${project_id}/team`); 
 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setTeam(data.users);
+        setTeam(data.users || []);
       } catch (error) {
+        setError('Ошибка при получении данных'); 
         console.error('Ошибка при получении данных:', error);
       }
     };
@@ -35,11 +36,12 @@ const Team = ({ project_id }) => {
         wordWrap: 'break-word',
       }}
     >
-      {team.length > 0 ? (
+      {error ? ( 
+        <p>{error}</p>
+      ) : team.length > 0 ? (
         team.map(user => (
           <div key={user.user_id}>
-            <span><p ><abbr className='team' title={user.f_name}>{`${user.f_name} `}</abbr></p></span>
-            {/* <span>{`${user.f_name} ${user.l_name}`}</span> */}
+            <span><p><abbr className='team' title={user.f_name}>{`${user.f_name} `}</abbr></p></span>
           </div>
         ))
       ) : (

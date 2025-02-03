@@ -3,10 +3,12 @@ import '../../styles/menu_style.css';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { useMenuItems } from '../../hooks/Menu/MenuContext'; 
 import Board2 from './Board2';
+import Board from '../Board';
 
 const Menu = () => {
   const items = useMenuItems(); 
   const [localItems, setLocalItems] = useState(items); 
+  const [itemes, setItemes] = useState([]);
 
   const isDragging = useRef(false);  
   const gridWidth = 200; 
@@ -16,7 +18,11 @@ const Menu = () => {
   const minY = 0; 
   const maxY = 650; 
 
-  
+  const [lastActiveItem, setLastActiveItem] = useState({ x: 0, y: 0 });
+  const [boardOccupiedSpace, setBoardOccupiedSpace] = useState({ xStart: 0, xEnd: 0, yStart: 0, yEnd: 0 });
+
+  const boardRef = useRef(null);
+
   useEffect(() => {
     setLocalItems(items);
   }, [items]); 
@@ -48,6 +54,19 @@ const Menu = () => {
         maxX={maxX} 
         minY={minY} 
         maxY={maxY} 
+        lastActiveItem={lastActiveItem}
+        setLastActiveItem={setLastActiveItem}
+        boardOccupiedSpace={boardOccupiedSpace}
+        setBoardOccupiedSpace={setBoardOccupiedSpace}
+        boardRef={boardRef}
+      />
+      <Board 
+        items={itemes} 
+        setItems={setItemes} 
+        isDragging={isDragging}
+        boardOccupiedSpace={boardOccupiedSpace}
+        setBoardOccupiedSpace={setBoardOccupiedSpace}
+        boardRef={boardRef}
       />
     </DragDropContext>
   );
