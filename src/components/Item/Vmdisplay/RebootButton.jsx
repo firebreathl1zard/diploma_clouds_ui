@@ -1,9 +1,17 @@
 import React from 'react';
-import rebootImage from '../../../images/reload_icon-icons.com_69600.png'
+import rebootImage from '../../../images/reload_icon-icons.com_69600.png';
+
 const RebootButton = ({ onClick, isLoading }) => {
+  const handleClick = () => {
+    if (window.confirm("Вы уверены, что хотите перезагрузить?")) {
+      onClick();
+    }
+  };
+
   return (
     <button 
-      onClick={onClick} 
+      title="Перезагрузить"
+      onClick={handleClick} 
       className={`action-button ${isLoading ? 'loading' : ''}`}
       disabled={isLoading}
     >

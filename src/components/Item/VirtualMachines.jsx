@@ -66,12 +66,12 @@ const VirtualMachines = ({ projectId }) => {
                 </div>
               ))}
               <div className="action-buttons">
-                <StartButton />
-                <ShutdownButton />
-                <StopButton />
-                <RebootButton />
-                <ResetButton />
-                <DestroyButton />
+                  <StartButton title="Запустить" />
+                  <ShutdownButton title="Выключить" />
+                  <StopButton title="Остановить" />
+                  <RebootButton title="Перезагрузить" />
+                  <ResetButton title="Сбросить" />
+                  <DestroyButton title="Уничтожить" />
               </div>
             </div>
           ))
