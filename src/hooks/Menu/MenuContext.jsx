@@ -7,7 +7,7 @@ export const MenuProvider = ({ children }) => {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch('http://10.3.21.200:12000/api/v1/projects');
+      const response = await fetch('http://10.3.21.200:8000/api/v1/projects');
       const data = await response.json();
       
       const formattedItems = data.projects.map((project, index) => ({
@@ -28,12 +28,6 @@ export const MenuProvider = ({ children }) => {
   useEffect(() => {
 
     fetchItems();
-
-    
-    const intervalId = setInterval(fetchItems, 60000); 
-
-    
-    return () => clearInterval(intervalId);
   }, []); 
   return (
     <MenuContext.Provider value={itemes}>

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-
 import MachineSelection from './MachineSelection/MachineSelection';
 
 const VirtualMachines = ({ projectId }) => {
   const [vms, setVms] = useState([]);
   const [error, setError] = useState(null);
+  const [selectedPurpose, setSelectedPurpose] = useState('');
 
   useEffect(() => {
     const fetchVms = async () => {
       try {
-        const response = await fetch(`http://ivan.firebreathlizard.space:12000/api/v1/project/${projectId}/vms`);
+        const response = await fetch(`http://10.3.21.200:8000/api/v1/project/${projectId}/vms`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -40,15 +40,16 @@ const VirtualMachines = ({ projectId }) => {
             <p>VM ID: {vm.vm_identifier}</p>
             <p>IP Address: {vm.vm_ip_address}</p>
             <p>Status: {vm.status}</p>
+            <p>Purpose: {vm.vm_purpose}</p>
             {vm.configuration.map((config, index) => (
               <p key={index}>CPU: {config.cpu}, RAM: {config.ram} GB</p>
             ))}
           </div>
         ))
       ) : (
-
-        <MachineSelection project_id={projectId}/>
+        <MachineSelection project_id={projectId} onPurposeSelect={setSelectedPurpose} />
       )}
+      {selectedPurpose && <p>Выбранное назначение: {selectedPurpose}</p>} 
     </div>
   );
 };

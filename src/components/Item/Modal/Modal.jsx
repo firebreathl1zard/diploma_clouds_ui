@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import { modalStyles } from './Modal.styles';
 
 const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) => {
-  const [selectedVM, setSelectedVMState] = useState(null); 
+  const [selectedVM, setSelectedVMState] = useState(null);
+  const [purpose, setPurpose] = useState('');
 
   const handleConfirm = () => {
-    if (selectedVM) {
-      onConfirm(selectedVM);
+    if (selectedVM && purpose) {
+      onConfirm({ vm: selectedVM, purpose });
       onClose();
     } else {
-      alert('Пожалуйста, выберите конфигурацию ВМ.'); // Simple alert for user feedback
+      alert('Пожалуйста, выберите конфигурацию ВМ и назначение.');
     }
   };
 
   if (!isOpen) return null;
+
+  console.log('VM Configurations:', vmConfigurations);
 
   return (
     <div style={modalStyles.overlay}>
@@ -24,22 +27,26 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
         </div>
         <h3 style={modalStyles.subtitle}>Vm конфигурации:</h3>
         <div style={modalStyles.vmList}>
-          {vmConfigurations.map((vm) => (
-            <div key={vm.id} style={modalStyles.vmItem}>
-              <div
-                onClick={() => {
-                  setSelectedVMState(vm); 
-                  setSelectedVM(vm);
-                }}
-                style={{
-                  ...modalStyles.vmName,
-                  backgroundColor: selectedVM === vm ? '#e0f7fa' : 'transparent', 
-                }}
-              >
-                {vm.id}. {vm.name}
+          {vmConfigurations.length > 0 ? (
+            vmConfigurations.map((vm) => (
+              <div key={vm.id} style={modalStyles.vmItem}>
+                <div
+                  onClick={() => {
+                    setSelectedVMState(vm); 
+                    setSelectedVM(vm);
+                  }}
+                  style={{
+                    ...modalStyles.vmName,
+                    backgroundColor: selectedVM === vm ? '#e0f7fa' : 'transparent', 
+                  }}
+                >
+                  {vm.id}. {vm.name}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>Нет доступных конфигураций ВМ.</p>
+          )}
         </div>
 
         <div style={modalStyles.vmDetails}>
@@ -55,6 +62,14 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
             <p>Пожалуйста, выберите конфигурацию.</p>
           )}
         </div>
+
+        <h3 style={modalStyles.subtitle}>Выберите назначение:</h3>
+        <select value={purpose} onChange={(e) => setPurpose(e.target.value)} style={modalStyles.purposeSelect}>
+          <option value="">-- Выберите назначение --</option>
+          <option value="FE">Frontend</option>
+          <option value="BE">Backend</option>
+          <option value="DB">Database</option>
+        </select>
 
         <div style={modalStyles.buttonContainer}>
           <button onClick={handleConfirm} style={modalStyles.okButton}>

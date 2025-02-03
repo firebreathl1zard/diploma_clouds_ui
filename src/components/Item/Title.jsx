@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 
 const Title = () => {
@@ -7,7 +6,7 @@ const Title = () => {
   useEffect(() => {
     const fetchTitle = async () => {
       try {
-        const response = await fetch(''); 
+        const response = await fetch('API'); 
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -21,8 +20,6 @@ const Title = () => {
     fetchTitle();
   }, []);
 
-
-const Title = ({ title }) => {
   return (
     <div
       style={{

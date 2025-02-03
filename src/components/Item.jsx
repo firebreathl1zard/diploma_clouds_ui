@@ -11,7 +11,7 @@ import PaymentButton from './Item/PaymentButton';
 import Logs from './Item/Logs';
 import VirtualMachines from './Item/VirtualMachines';
 
-const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemDoubleClick }) => {
+const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemDoubleClick, isChild }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [offsetX, setOffsetX] = useState(0);
@@ -73,12 +73,15 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
     >
       {(provided) => (
         <div
+        id={item.id}
           ref={provided.innerRef}
           {...provided.draggableProps}
           className={`item ${isDragging ? 'dragging' : ''} ${isExpanded ? 'expanded' : 'collapsed'}`}
           style={{
             left: item.x,
             top: item.y,
+            position: 'absolute',
+            zIndex: '999',
           }}
           onMouseUp={handleMouseUp}
         >
@@ -87,12 +90,14 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
             className="item-header"
             onDoubleClick={handleExpand}
           >
+            <div className="item-content-header">
             <p><abbr className='item-title' title={item.content}>{item.content}</abbr></p>
+          </div>
           </div>
           {isExpanded && (
             <div className="item-content">
               <div className="item-content-header">
-                <Metrics metrics={metrics} />
+                {/* <Metrics metrics={metrics} /> */}
                 <div style={{ minWidth: '80px' }}>
                   <Team project_id={item.id} />
                 </div>
@@ -105,6 +110,7 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
               </div>
               <Logs logs={logs} />
             </div>
+            
           )}
         </div>
       )}
