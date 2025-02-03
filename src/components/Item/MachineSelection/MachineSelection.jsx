@@ -50,7 +50,7 @@ const MachineSelection = ({ project_id, onPurposeSelect }) => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div>
       <div style={modalStyles.addButtonContainer} onClick={() => setIsModalOpen(true)}>
         <button style={modalStyles.addButton}>+</button>
       </div>

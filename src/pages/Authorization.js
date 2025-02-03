@@ -38,8 +38,8 @@ function AuthorizationPages() {
 
       const data = await response.json();
       console.log(data);
-
       localStorage.setItem('token', data.token);
+      localStorage.setItem('username', username);
 
       setSuccessMessage('Успешная авторизация!');
       setError(''); 

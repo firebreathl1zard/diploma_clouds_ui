@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import MachineSelection from './MachineSelection/MachineSelection';
+import StartButton from './Vmdisplay/StartButton';
+import ShutdownButton from './Vmdisplay/ShutdownButton';
+import StopButton from './Vmdisplay/StopButton';
+import RebootButton from './Vmdisplay/RebootButton';
+import ResetButton from './Vmdisplay/ResetButton';
+import DestroyButton from './Vmdisplay/DestroyButton';
+import SettingsButton from './Vmdisplay/SettingsButton'; 
+import '../../styles/Vmdisplay.css';
 
 const VirtualMachines = ({ projectId }) => {
   const [vms, setVms] = useState([]);

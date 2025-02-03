@@ -1,0 +1,47 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 700px; 
+    width: 100%; 
+    overflow: auto; 
+    max-height: 80vh; 
+}
+
+.ssh-keys-list {
+    margin-top: 20px; 
+}
+
+.ssh-key-block {
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    padding: 10px; 
+    margin-bottom: 10px; 
+    background-color: #f9f9f9; 
+}
+
+.ssh-key-title {
+    font-weight: bold; 
+    font-size: 1.1em; 
+    color: #333; 
+}
+
+.ssh-key-value {
+    white-space: pre-wrap; 
+    color: #555; 
+    overflow-wrap: break-word; 
+    word-wrap: break-word; 
+    max-width: 100%; 
+}
