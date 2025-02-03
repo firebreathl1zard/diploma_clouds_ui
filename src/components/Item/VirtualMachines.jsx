@@ -12,12 +12,12 @@ import '../../styles/Vmdisplay.css';
 const VirtualMachines = ({ projectId }) => {
   const [vms, setVms] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState({}); 
+  const [selectedPurpose, setSelectedPurpose] = useState('');
 
   useEffect(() => {
     const fetchVms = async () => {
       try {
-        const response = await fetch(`http://ivan.firebreathlizard.space:8000/api/v1/project/${projectId}/vms`);
+        const response = await fetch(`http://10.3.21.200:8000/api/v1/project/${projectId}/vms`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -79,6 +79,7 @@ const VirtualMachines = ({ projectId }) => {
           <p>No virtual machines available.</p>
         )}
       </div>
+
     </div>
   );
 };

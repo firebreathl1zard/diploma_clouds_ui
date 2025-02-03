@@ -28,12 +28,6 @@ export const MenuProvider = ({ children }) => {
   useEffect(() => {
 
     fetchItems();
-
-    
-    const intervalId = setInterval(fetchItems, 60000); 
-
-    
-    return () => clearInterval(intervalId);
   }, []); 
   return (
     <MenuContext.Provider value={itemes}>

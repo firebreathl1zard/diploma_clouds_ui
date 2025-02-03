@@ -8,11 +8,12 @@ import '../styles/HomePages.css';
 const HomePages = () => {
   const [items, setItems] = useState([]);
   const isDragging = useRef(false);
+  const isDragging = useRef(false);  
 
-  const handleOnDragEnd = (result) => {
+  const handleOnDragEnd = (result) => {    
     if (!result.destination) return;
 
-    const itemsCopy = Array.from(items);
+    const itemsCopy = Array.from(items);           
     const [reorderedItem] = itemsCopy.splice(result.source.index, 1);
     itemsCopy.splice(result.destination.index, 0, reorderedItem);
 
@@ -20,28 +21,31 @@ const HomePages = () => {
       item.zIndex = index + 1;
     });
 
-    setItems(itemsCopy);
+    setItems(itemsCopy);   
   };
 
 
+
   const handleLogout = () => {
-    
     console.log("User  logged out");
     localStorage.removeItem('token');
-    window.location.href = '/'; 
+    window.location.href = '/';
   };
 
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+      }}>
       <MenuProvider>
-        <Menu />
+      <Menu />
       </MenuProvider>
-      <Board items={items} setItems={setItems} isDragging={isDragging} />
-
-      <div className="profile-container">
-        <Profile />
-
+      {/* <Board items={items} setItems={setItems} isDragging={isDragging} /> */}
       </div>
+      <button onClick={handleLogout} style={{ marginTop: '20px' }}>
+        Выйти
+      </button>
     </DragDropContext>
   );
 };
