@@ -11,7 +11,6 @@ const SettingsButton = () => {
 
     const toggleModal = () => {
         setIsOpen(!isOpen);
-        // Reset states when modal is closed
         if (isOpen) {
             setSshKeys([]);
             setVms([]);

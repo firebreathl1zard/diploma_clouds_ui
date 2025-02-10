@@ -1,10 +1,35 @@
 import React from 'react';
 import shutdownImage from '../../../images/close-button_icon-icons.com_72803.png';
 
-const ShutdownButton = ({ onClick, isLoading }) => {
-  const handleClick = () => {
+const ShutdownButton = ({ onClick, isLoading, vm_id }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const handleClick = async () => {
     if (window.confirm("Вы уверены, что хотите выключить?")) {
-      onClick();
+      console.log(vm_id);
+      
+      const requestData = {
+        vm_id: String(vm_id),
+        action: "shutdown"
+      };
+
+      try {
+        const response = await fetch(`${apiUrl}/v1/vm/action`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify(requestData),
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        onClick();
+      } catch (error) {
+        console.error('Ошибка при отправке запроса:', error);
+      }
     }
   };
 

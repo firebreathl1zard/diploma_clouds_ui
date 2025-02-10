@@ -1,13 +1,16 @@
 export const modalStyles = {
     addButtonContainer: {
+      // marginRight: '-100px',
+      // justifyContent: 'right',
+      // alignItems: 'right',
       border: '1px solid #333',
       borderRadius: '5px',
-      padding: '10px',
+      // padding: '10px',
       position: 'relative',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      // cursor: 'pointer',
+      // display: 'flex',
+      // alignItems: 'center',
+      // justifyContent: 'center',
       height: '150px',
       width: '160px', 
       

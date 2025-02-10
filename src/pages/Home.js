@@ -7,7 +7,7 @@ import Profile from '../components/Profile';
 import '../styles/HomePages.css'; 
 const HomePages = () => {
   const [items, setItems] = useState([]);
-  const isDragging = useRef(false);
+  // const isDragging = useRef(false);
   const isDragging = useRef(false);  
 
   const handleOnDragEnd = (result) => {    
@@ -43,9 +43,7 @@ const HomePages = () => {
       </MenuProvider>
       {/* <Board items={items} setItems={setItems} isDragging={isDragging} /> */}
       </div>
-      <button onClick={handleLogout} style={{ marginTop: '20px' }}>
-        Выйти
-      </button>
+      <div className='profile-container'><Profile></Profile></div>
     </DragDropContext>
   );
 };

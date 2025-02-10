@@ -5,7 +5,7 @@ import '../styles/Item.css';
 import Title from './Item/Title';
 import Team from './Item/Team';
 import Investment from './Item/Investment';
-import Metrics from './Item/Metrics';
+// import Metrics from './Item/Metrics';
 import MachineSelection from './Item/MachineSelection/MachineSelection';
 import PaymentButton from './Item/PaymentButton';
 import Logs from './Item/Logs';
@@ -73,7 +73,7 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
     >
       {(provided) => (
         <div
-        id={item.id}
+          id={item.id}
           ref={provided.innerRef}
           {...provided.draggableProps}
           className={`item ${isDragging ? 'dragging' : ''} ${isExpanded ? 'expanded' : 'collapsed'}`}
@@ -91,14 +91,13 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
             onDoubleClick={handleExpand}
           >
             <div className="item-content-header">
-            <p><abbr className='item-title' title={item.content}>{item.content}</abbr></p>
-          </div>
+              <p><abbr className='item-title' title={item.content}>{item.content}</abbr></p>
+            </div>
           </div>
           {isExpanded && (
             <div className="item-content">
               <div className="item-content-header">
-                {/* <Metrics metrics={metrics} /> */}
-                <div style={{ minWidth: '80px' }}>
+                <div style={{ minWidth: '80px', marginLeft: '280px', }}>
                   <Team project_id={item.id} />
                 </div>
               </div>
@@ -106,11 +105,11 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
                 <div className="machine-selection-container">
                   <VirtualMachines projectId={item.id} /> 
                 </div>
-                <Investment investmentAmount={investmentAmount} setInvestmentAmount={setInvestmentAmount} />
+                {/* <Metrics projectId={item.id}/> */}
+                <Investment investmentAmount={investmentAmount} setInvestmentAmount={setInvestmentAmount} project_id={item.id} />
               </div>
               <Logs logs={logs} />
             </div>
-            
           )}
         </div>
       )}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const useFetchMachines = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [machines, setMachines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -8,7 +9,13 @@ const useFetchMachines = () => {
   useEffect(() => {
     const fetchMachines = async () => {
       try {
-        const response = await fetch('http://10.3.21.200:8000/api/v1/vm/confs');
+        const response = await fetch(`${apiUrl}/v1/vm/confs`,{
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
