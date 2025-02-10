@@ -10,12 +10,12 @@ const SSHkey = () => {
     const [username, setUsername] = useState('');
     const apiUrl = process.env.REACT_APP_API_URL;
 
-    useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-        if (storedUsername) {
-            setUsername(storedUsername);
-        }
-    }, []);
+    // useEffect(() => {
+    //     const storedUsername = localStorage.getItem('username');
+    //     if (storedUsername) {
+    //         setUsername(storedUsername);
+    //     }
+    // }, []);
 
     const fetchSshKeys = async () => {
         if (username) {
