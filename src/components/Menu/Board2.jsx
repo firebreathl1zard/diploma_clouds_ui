@@ -20,7 +20,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
         ? {
             ...i,
             x: isInsideBoard ? clientX - 250 : clientX - 25,
-            y: clientY - 25,
+            y: isInsideBoard ? clientY - 25 : clientY - 25,
             isDragging: true,
           }
         : i
@@ -72,7 +72,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
 
     if (boardElement && itemElement) {
       boardElement.appendChild(itemElement);
-      console.log(`Item ${item.id} moved to Board`);
+      // console.log(`Item ${item.id} moved to Board`);
     } else {
       console.error(`Failed to move item: ${item.id}. Board or Item not found.`);
     }
@@ -81,7 +81,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
   const handleItemDragEnd = (item) => {
     const isInsideGrid = isItemInsideBoard(item.x, item.y);
     
-    console.log(`Is item inside board: ${isInsideGrid}`);
+    // console.log(`Is item inside board: ${isInsideGrid}`);
   
     const boardElement = boardRef.current; 
     const itemElement = document.getElementById(item.id); 
@@ -96,7 +96,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
       i.id === item.id
         ? {
             ...i,
-            x: isInsideBoard ? item.x : item.x - 250, 
+            x: isInsideBoard ? item.x : item.x - 250,
             y: item.y,
             isDragging: false,
           }

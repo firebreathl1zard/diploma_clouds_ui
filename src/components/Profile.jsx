@@ -4,16 +4,33 @@ import SSHkey from './SSHkey';
 import profileImage from '../images/ui_user_profile_avatar_person_icon_208734.png'
 
 const Profile = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleProfile = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleLogout = () => {
-    console.log("User  logged out");
-    localStorage.removeItem('token');
-    window.location.href = '/';
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/v1/logout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      console.log("User logged out");
+      // localStorage.removeItem('token');
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
 
   return (
@@ -37,7 +54,7 @@ const Profile = () => {
           flexDirection: 'column', 
           alignItems: 'flex-start' 
         }}>
-          <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <button style={{ marginBottom: '10px' }}>Projects</button>
           </Link>
           <SSHkey/>

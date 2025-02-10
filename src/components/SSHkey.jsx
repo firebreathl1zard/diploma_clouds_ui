@@ -8,18 +8,25 @@ const SSHkey = () => {
     const [sshKey, setSshKey] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [username, setUsername] = useState('');
+    const apiUrl = process.env.REACT_APP_API_URL;
 
-    useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-        if (storedUsername) {
-            setUsername(storedUsername);
-        }
-    }, []);
+    // useEffect(() => {
+    //     const storedUsername = localStorage.getItem('username');
+    //     if (storedUsername) {
+    //         setUsername(storedUsername);
+    //     }
+    // }, []);
 
     const fetchSshKeys = async () => {
         if (username) {
             try {
-                const response = await fetch(`http://ivan.firebreathlizard.space:8000/api/v1/sshkeys?login=${username}`);
+                const response = await fetch(`${apiUrl}/v1/sshkeys?login=${username}`,{
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                  });
                 if (!response.ok) {
                     throw new Error('Ошибка при получении SSH ключей');
                 }

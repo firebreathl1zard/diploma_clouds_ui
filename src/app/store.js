@@ -1,4 +1,4 @@
-// import { createStore, applyMiddleware } from 'redux';
+// import { create, applyMiddleware } from 'redux';
 // import {thunk} from 'redux-thunk'; // Исправлено
 
 // // Начальное состояние
@@ -20,6 +20,6 @@
 // };
 
 // // Создание хранилища с middleware
-// const store = createStore(reducer, applyMiddleware(thunk));
+// const  = create(reducer, applyMiddleware(thunk));
 
-// export default store;
+// export default ;

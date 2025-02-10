@@ -2,13 +2,20 @@ import React, { useEffect, useState } from 'react';
 import '../../styles/Item.css'
 
 const Team = ({ project_id }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [team, setTeam] = useState([]); 
   const [error, setError] = useState(null); 
 
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-        const response = await fetch(`http://10.3.21.200:8000/api/v1/project/${project_id}/team`); 
+        const response = await fetch(`${apiUrl}/v1/project/${project_id}/team`,{
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        }); 
 
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -27,6 +34,7 @@ const Team = ({ project_id }) => {
   return (
     <div
       style={{
+        
         border: '1px solid #ccc',
         borderRadius: '4px',
         padding: '8px',

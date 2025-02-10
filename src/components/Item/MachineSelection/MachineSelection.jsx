@@ -5,6 +5,7 @@ import useFetchMachines from '../../../hooks/useFetchMachines';
 import { modalStyles } from './MachineSelection.styles';
 
 const MachineSelection = ({ project_id, onPurposeSelect }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const { machines = [] } = useFetchMachines();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -15,18 +16,19 @@ const MachineSelection = ({ project_id, onPurposeSelect }) => {
     console.log('Selected Purpose:', purpose); 
     setSelectedVM(vm);
     setPurpose(purpose);
-    onPurposeSelect(purpose); 
+    // onPurposeSelect(purpose); 
     setIsConfirmModalOpen(true);
   };
 
   const handleFinalConfirm = async () => {
     if (selectedVM) {
       try {
-        const response = await fetch('http://10.3.21.200:8000/api/v1/vm/create', { 
+        const response = await fetch(`${apiUrl}/v1/vm/create`, { 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: 'include',
           body: JSON.stringify({
             vmConfigurationID: String(selectedVM.id), 
             projectID: String(project_id),

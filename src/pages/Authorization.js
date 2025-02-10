@@ -7,43 +7,33 @@ function AuthorizationPages() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [token, setToken] = useState(''); 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-
-      
-
-      navigate('/home');
-    }
-  }, [navigate]);
+  const apiUrl = process.env.REACT_APP_API_URL;
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     try {
-      const response = await fetch('http://10.3.21.200:8000/api/v1/login', {
+      const response = await fetch(`${apiUrl}/v2/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password }),
+        credentials: 'include',
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Ошибка авторизации');
       }
 
-      const data = await response.json();
-      console.log(data);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('username', username);
-
       setSuccessMessage('Успешная авторизация!');
-      setError(''); 
-      navigate('/home'); 
+      setToken(token);
+      setError('');
+      navigate('/home');
     } catch (error) {
       console.error('Ошибка:', error);
       setError(error.message);
