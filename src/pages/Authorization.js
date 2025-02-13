@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/index.css';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { loginSuccess, unauthorized } from './authSlice';
 
-function AuthorizationPages() {
+function AuthorizationPages({ setData }) { 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -10,10 +13,24 @@ function AuthorizationPages() {
   const [token, setToken] = useState(''); 
   const navigate = useNavigate();
   const apiUrl = process.env.REACT_APP_API_URL;
-  
+  const dispatch = useDispatch();
+  const status = useSelector((state) => state.auth.status);
+
+  useEffect(() => {
+    if (status === 'Login successful') {
+      navigate('/workflow');
+    }
+  }, [status, navigate]);
 
   const handleSubmit = async (event) => {
+
     event.preventDefault();
+
+    if (!username || !password) {
+      setError('Пожалуйста, введите имя пользователя и пароль.');
+      setSuccessMessage('');
+      return;
+    }
   
     try {
       const response = await fetch(`${apiUrl}/v2/login`, {
@@ -25,18 +42,28 @@ function AuthorizationPages() {
         credentials: 'include',
       });
   
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Ошибка авторизации');
+        if (data.message) {
+          setError(data.message);
+        } else {
+          setError('Ошибка авторизации');
+        }
+        setSuccessMessage('');
+        dispatch(unauthorized());
+        return;
       }
 
+      setToken(data.token);
       setSuccessMessage('Успешная авторизация!');
-      setToken(token);
+      dispatch(loginSuccess());
       setError('');
-      navigate('/home');
+      setData(data); 
+      navigate('/workflow'); 
     } catch (error) {
       console.error('Ошибка:', error);
-      setError(error.message);
+      setError('Произошла ошибка при авторизации.');
       setSuccessMessage('');
     }
   };

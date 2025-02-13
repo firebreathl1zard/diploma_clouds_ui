@@ -1,12 +1,15 @@
-// import React from 'react';
-// import { Navigate } from 'react-router-dom';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-// const ProtectedRoute = ({ children, token }) => {
-// //   if (!token) {
-// //     return <Navigate to="/" />;
-// //   }
+const ProtectedRoute = ({ children }) => {
+  const status = useSelector((state) => state.auth.status);
 
-//   return children;
-// };
+  if (status === 'Unauthorized' || status === undefined) {
+    return <Navigate to="/" />;
+  }
 
-// export default ProtectedRoute;
+  return children;
+};
+
+export default ProtectedRoute;

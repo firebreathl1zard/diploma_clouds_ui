@@ -17,6 +17,7 @@ const VirtualMachines = ({ projectId }) => {
   const [vmIds, setVmIds] = useState([]);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateInterval, setUpdateInterval] = useState(7000);
+  const [intervalId, setIntervalId] = useState(null);
 
   const fetchVms = async () => {
     try {
@@ -47,21 +48,52 @@ const VirtualMachines = ({ projectId }) => {
   useEffect(() => {
     fetchVms(); 
 
-    const intervalId = setInterval(() => {
+    const id = setInterval(() => {
       fetchVms(); 
     }, updateInterval);
+    setIntervalId(id);
 
-    return () => clearInterval(intervalId); 
+    return () => clearInterval(id); 
   }, [projectId, updateInterval]);
 
   const handleButtonClick = () => {
     setIsUpdating(true);
-    setUpdateInterval(1000);
+    setUpdateInterval(500);
+
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+
+    const id = setInterval(() => {
+      fetchVms();
+    }, 500);
+    setIntervalId(id);
 
     setTimeout(() => {
-      setIsUpdating(false);
+      clearInterval(id);
       setUpdateInterval(7000);
+      fetchVms();
+      const newId = setInterval(() => {
+        fetchVms();
+      }, 7000);
+      setIntervalId(newId);
     }, 30000);
+  };
+
+  const isButtonDisabled = (status, action) => {
+    const disabledActions = {
+      creating: true,
+      configuring: true,
+      rebooting: true,
+      resetting: true,
+      destroying: true,
+      starting: true,
+      'shutting down': true,
+      stopping: true,
+      running: action === 'start' || action === 'destroy',
+      stopped: action !== 'start' && action !== 'destroy',
+    };
+    return disabledActions[status] || false;
   };
 
   if (error) {
@@ -76,30 +108,62 @@ const VirtualMachines = ({ projectId }) => {
             <div className="vm-item" key={vm.vm_id}>
               <div className="vm-header">
                 <p>{vm.vm_purpose}</p>
-                <SettingsButton/>
+                <SettingsButton title="Настройки" vm_id={vm.vm_id}  />
               </div> 
               {vm.configuration.map((config, index) => (
                 <div key={index}>
                   <p>CPU: {config.cpu}</p>
-                  <div className="load-box" style={{ width: `${config.cpuLoad}%` }}>
-                    {/* <span>{config.cpuLoad}%</span> */}
-                  </div>
+                  <div className="load-box" style={{ width: `${config.cpuLoad}%` }} />
                   <p>RAM: {config.ram}</p>
                   <p>Status: {vm.status}</p>
-                  <div className="load-box" style={{ width: `${config.ramLoad}%` }}>
-                    {/* <span>{config.ramLoad}%</span> */}
-                  </div>
+                  <div className="load-box" style={{ width: `${config.ramLoad}%` }} />
                 </div>
               ))}
               <div className="action-buttons">
-                <StartButton vm_id={vm.vm_id} project_id={projectId} title="Запустить" onClick={handleButtonClick} />
-                <ShutdownButton vm_id={vm.vm_id} project_id={projectId} title="Выключить" onClick={handleButtonClick} />
-                <StopButton vm_id={vm.vm_id} project_id={projectId} title="Остановить" onClick={handleButtonClick} />
-                <RebootButton vm_id={vm.vm_id} project_id={projectId} title="Перезагрузить" onClick={handleButtonClick} />
-                <ResetButton vm_id={vm.vm_id} project_id={projectId} title="Сбросить" onClick={handleButtonClick} />
-                <DestroyButton vm_id={vm.vm_id} project_id={projectId} title="Уничтожить" onClick={handleButtonClick} />
+                <StartButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Запустить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'start')}
+                />
+                <ShutdownButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Выключить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'shutdown')}
+                />
+                <StopButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Остановить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'stop')}
+                />
+                <RebootButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Перезагрузить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'reboot')}
+                />
+                <ResetButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Сбросить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'reset')}
+                />
+                <DestroyButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Уничтожить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'destroy')}
+                />
               </div>
-              <Metrics vm_id={vm.vm_id}/>
+              {vm.status !== 'creating' && <Metrics vm_id={vm.vm_id} status={vm.status} />}
             </div>
           ))
         ) : (

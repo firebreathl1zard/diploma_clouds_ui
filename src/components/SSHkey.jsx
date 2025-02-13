@@ -7,92 +7,45 @@ const SSHkey = () => {
     const [keyName, setKeyName] = useState('');
     const [sshKey, setSshKey] = useState('');
     const [showModal, setShowModal] = useState(false);
-    const [username, setUsername] = useState('');
-    const apiUrl = process.env.REACT_APP_API_URL;
-
-    // useEffect(() => {
-    //     const storedUsername = localStorage.getItem('username');
-    //     if (storedUsername) {
-    //         setUsername(storedUsername);
-    //     }
-    // }, []);
+    const apiUrl = process.env.REACT_APP_API_URL; 
 
     const fetchSshKeys = async () => {
-        if (username) {
-            try {
-                const response = await fetch(`${apiUrl}/v1/sshkeys?login=${username}`,{
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                  });
-                if (!response.ok) {
-                    throw new Error('Ошибка при получении SSH ключей');
-                }
-                const data = await response.json();
-                
-                if (data && Array.isArray(data.user_ssh_keys)) {
-                    setSshKeys(data.user_ssh_keys);
-                } else {
-                    console.error('Полученные данные не содержат массив user_ssh_keys:', data);
-                    setSshKeys([]);
-                }
-            } catch (error) {
-                console.error('Ошибка при получении SSH ключей:', error.message);
-                alert('Не удалось получить SSH ключи. Пожалуйста, проверьте соединение с сервером.');
-            }
+        const response = await fetch(`${apiUrl}/v1/sshkeys`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+        const data = await response.json();
+        
+        if (data && Array.isArray(data.user_ssh_keys)) {
+            setSshKeys(data.user_ssh_keys);
+        } else {
+            setSshKeys([]);
         }
     };
 
     useEffect(() => {
         fetchSshKeys();
-    }, [username]);
-
-    const validateSSHKey = (key) => {
-        const trimmedKey = key.trim();
-        const regex = /^(ssh-(rsa|dss|ed25519|ecdsa-sha2-nistp(256|384|521)|rsa-cert-v01@openssh.com|ed25519-cert-v01@openssh.com|ecdsa-sha2-nistp(256|384|521)-cert-v01@openssh.com)) ([A-Za-z0-9+/=]+) ?(.*)?$/;
-
-        return regex.test(trimmedKey);
-    };
+    }, []);
 
     const handleSendKey = async () => {
-        if (!username) {
-            alert('Пожалуйста, войдите в систему, чтобы отправить SSH ключ.');
-            return;
-        }
+        const response = await fetch(`${apiUrl}/v1/sshkey/save`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                ssh_key: sshKey,
+                title: keyName
+            }),
+        });
 
-        if (validateSSHKey(sshKey)) {
-            try {
-                const response = await fetch('http://ivan.firebreathlizard.space:8000/api/v1/sshkey/save', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        user_login: username,
-                        ssh_key: sshKey,
-                        title: keyName
-                    }),
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`Ошибка: ${response.status} ${errorData.message || response.statusText}`);
-                }
-
-                
-                setKeyName('');
-                setSshKey('');
-                await fetchSshKeys(); 
-
-            } catch (error) {
-                console.error('Ошибка при отправке SSH ключа:', error.message);
-                alert('Не удалось отправить SSH ключ. Пожалуйста, проверьте соединение с сервером.');
-            }
-        } else {
-            alert('Неверный SSH ключ. Пожалуйста, проверьте его.');
-        }
+        setKeyName('');
+        setSshKey('');
+        await fetchSshKeys(); 
     };
 
     const openModal = () => {

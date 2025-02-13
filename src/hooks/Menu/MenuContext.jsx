@@ -24,6 +24,7 @@ export const MenuProvider = ({ children }) => {
         y: index * 50,
         isDragging: false,
         expanded: false,
+        parentId: null,
       }));
 
       setItemes(formattedItems);

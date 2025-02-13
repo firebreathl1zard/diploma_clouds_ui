@@ -12,7 +12,7 @@ import Logs from './Item/Logs';
 import VirtualMachines from './Item/VirtualMachines';
 
 const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemDoubleClick, isChild }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(item.expanded);
   const [isDragging, setIsDragging] = useState(false);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
@@ -23,8 +23,10 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
   const [team, setTeam] = useState('[Enter Team Here]');
 
   const handleExpand = () => {
-    setIsExpanded(!isExpanded);
-    handleItemDoubleClick(item.id);
+    if (isChild) {
+      setIsExpanded(!isExpanded);  
+      handleItemDoubleClick(item.id);
+      }
   };
 
   useEffect(() => {

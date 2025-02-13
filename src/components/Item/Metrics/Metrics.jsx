@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const Metrics = ({vm_id}) => {
+const Metrics = ({ vm_id, status }) => {
   const [metrics, setMetrics] = useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -18,17 +18,21 @@ const Metrics = ({vm_id}) => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setMetrics(data.metrics); 
+        setMetrics(data.metrics);
       } catch (error) {
         console.error('Ошибка при получении данных:', error);
       }
     };
 
+    if (status === 'stopped') {
+      setMetrics([{ vmid: vm_id, cpu: 0, mem: 0, maxmem: 1 }]);
+    } else {
       fetchMetrics();
-    const intervalId = setInterval(fetchMetrics, 1000);
+      const intervalId = setInterval(fetchMetrics, 1000);
 
-    return () => clearInterval(intervalId); 
-  }, [apiUrl]);
+      return () => clearInterval(intervalId);
+    }
+  }, [apiUrl, status, vm_id]);
 
   const renderMetricBar = (label, value, maxValue) => {
     const percentage = (value / maxValue) * 100;

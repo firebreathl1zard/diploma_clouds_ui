@@ -1,8 +1,9 @@
 import React from 'react';
 import destroyImage from '../../../images/trashcan_delete_remove_trash_icon_178327.png';
 
-const DestroyButton = ({ onClick, isLoading,vm_id }) => {
+const DestroyButton = ({ onClick, isLoading, vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;
+
   const handleClick = async () => {
     if (window.confirm("Вы уверены, что хотите уничтожить?")) {
       console.log(vm_id);
@@ -37,12 +38,12 @@ const DestroyButton = ({ onClick, isLoading,vm_id }) => {
     <button 
       title="Уничтожить"
       onClick={handleClick} 
-      className={`action-button ${isLoading ? 'loading' : ''}`}
-      disabled={isLoading}
+      className={`action-button ${isLoading ? 'loading' : ''} ${disabled ? 'disabled-button' : ''}`}
+      disabled={isLoading || disabled} 
     >
       <img src={destroyImage} alt="Destroy" />
     </button>
-      );
-    };
+  );
+};
 
 export default DestroyButton;

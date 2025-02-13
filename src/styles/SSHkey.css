@@ -69,4 +69,11 @@
 }
 
 .key-icon {
-    margin-left: 10px }
+    margin-left: 10px 
+}
+.selected-key {
+    background-color: #e0f7fa; /* Светло-голубой фон */
+    border: 1px solid #00796b; /* Темно-зеленая рамка */
+    border-radius: 4px; /* Закругленные углы */
+    padding: 8px; /* Отступы */
+}

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Item from '../Item';
 
-const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, maxY, lastActiveItem, setLastActiveItem,boardOccupiedSpace, boardRef }) => {
+const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, maxY, lastActiveItem, setLastActiveItem, boardOccupiedSpace, boardRef }) => {
   const [offsetY, setOffsetY] = useState(0);
   const itemWidth = 100;
   const itemHeight = 100;
@@ -19,7 +19,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
       i.id === item.id
         ? {
             ...i,
-            x: isInsideBoard ? clientX - 250 : clientX - 25,
+            x: isInsideBoard ? clientX - 25 : clientX - 25,
             y: isInsideBoard ? clientY - 25 : clientY - 25,
             isDragging: true,
           }
@@ -33,19 +33,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
   const handleItemDrag = (item, event) => {
     const { clientX, clientY } = event;
 
-    // const isInsideGrid = item.x >= minX && item.x <= maxX && item.y >= minY && item.y <= maxY;
-
-    // let snappedX, snappedY;
-
-    // if (isInsideGrid) {
-    //   ({ snappedX, snappedY } = snapToGrid(clientX - 25, clientY - 25));
-    // } else {
-    //   snappedX = clientX;
-    //   snappedY = clientY;
-    // }
-
     const updatedItems = items.map((i) =>
-      
       i.id === item.id
         ? {
             ...i,
@@ -66,13 +54,23 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
       y <= boardOccupiedSpace.yEnd
     );
   };
+
   const moveItemToBoard = (item) => {
     const boardElement = boardRef.current;
     const itemElement = document.getElementById(item.id);
-
+  
     if (boardElement && itemElement) {
+      const rect = itemElement.getBoundingClientRect();
+      const boardRect = boardElement.getBoundingClientRect();
+  
+      const newX = rect.left - boardRect.left;
+      const newY = rect.top - boardRect.top;
+  
+      itemElement.style.position = 'absolute';
+      itemElement.style.left = `${newX}px`;
+      itemElement.style.top = `${newY}px`;
+  
       boardElement.appendChild(itemElement);
-      // console.log(`Item ${item.id} moved to Board`);
     } else {
       console.error(`Failed to move item: ${item.id}. Board or Item not found.`);
     }
@@ -80,12 +78,8 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
   
   const handleItemDragEnd = (item) => {
     const isInsideGrid = isItemInsideBoard(item.x, item.y);
-    
-    // console.log(`Is item inside board: ${isInsideGrid}`);
-  
     const boardElement = boardRef.current; 
     const itemElement = document.getElementById(item.id); 
-  
     const isInsideBoard = boardElement && boardElement.contains(itemElement);
   
     if (isInsideGrid) {
@@ -96,31 +90,16 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
       i.id === item.id
         ? {
             ...i,
-            x: isInsideBoard ? item.x : item.x - 250,
+            // x: isInsideBoard ? item.x : item.x - 250,
+            x: item.x,
             y: item.y,
             isDragging: false,
           }
         : i
     );
   
-    if (!isInsideBoard) {
-      const updatedItems = items.map((i) =>
-        i.id === item.id
-          ? {
-              ...i,
-              x: item.x,
-              y: item.y,
-              isDragging: false,
-            }
-          : i
-      );
-      setItems(updatedItems);
-    } else {
-      setItems(updatedItems);
-    }
-  
+    setItems(updatedItems);
     isDragging.current = false;
-  
     setLastActiveItem({ x: item.x, y: item.y });
   };
 
@@ -140,27 +119,25 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
             height: '700px', 
             minWidth: '200px', 
             border: '1px solid black',
-            // zIndex: '0',
             overflow: 'scroll',
-            // position: 'relative',
           }}
         >
-          {items.map((item, index) => (
-            <Item
-              key={item.id}
-              item={item}
-              index={index}
-              handleItemDragStart={handleItemDragStart}
-              handleItemDrag={handleItemDrag}
-              handleItemDragEnd={handleItemDragEnd}
-              handleItemDoubleClick={handleItemDoubleClick}
-            />
-          ))}
+          {items.map((item, index) => {
+            const isChild = isItemInsideBoard(item.x, item.y);
+            return (
+              <Item
+                key={item.id}
+                item={item}
+                index={index}
+                handleItemDragStart={handleItemDragStart}
+                handleItemDrag={handleItemDrag}
+                handleItemDragEnd={handleItemDragEnd}
+                handleItemDoubleClick={handleItemDoubleClick}
+                isChild={isChild}
+              />
+            );
+          })}
           {provided.placeholder}
-          {/* Отображаем координаты последнего активного элемента */}
-          {/* <div>
-            <p>Последний активный элемент: X: {lastActiveItem.x}, Y: {lastActiveItem.y}</p>
-          </div> */}
         </div>
       )}
     </Droppable>
