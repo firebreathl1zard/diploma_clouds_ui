@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
   const status = useSelector((state) => state.auth.status);
 
   if (status === 'Unauthorized' || status === undefined) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
 
   return children;

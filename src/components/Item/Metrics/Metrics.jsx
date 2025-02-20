@@ -70,7 +70,7 @@ const Metrics = ({ vm_id, status }) => {
       {metrics.map((metric) => (
         <div key={metric.vmid}>
           {renderMetricBar('CPU', metric.cpu * 100, 100)} 
-          {renderMetricBar('MEM', metric.mem, metric.maxmem)} 
+          {renderMetricBar('MEM', metric.mem, metric.maxmem)}
         </div>
       ))}
     </div>

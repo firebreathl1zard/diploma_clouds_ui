@@ -7,8 +7,6 @@ import Profile from '../components/Profile';
 import '../styles/HomePages.css'; 
 const WorkflowPages = () => {
   const [items, setItems] = useState([]);
-  // const isDragging = useRef(false);
-  const isDragging = useRef(false);  
 
   const handleOnDragEnd = (result) => {    
     if (!result.destination) return;

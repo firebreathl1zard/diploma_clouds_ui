@@ -28,25 +28,13 @@ const SSHkey = () => {
 
     useEffect(() => {
         fetchSshKeys();
+
+        const intervalId = setInterval(() => {
+            fetchSshKeys();
+        }, 5000);
+
+        return () => clearInterval(intervalId);
     }, []);
-
-    const handleSendKey = async () => {
-        const response = await fetch(`${apiUrl}/v1/sshkey/save`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                ssh_key: sshKey,
-                title: keyName
-            }),
-        });
-
-        setKeyName('');
-        setSshKey('');
-        await fetchSshKeys(); 
-    };
 
     const openModal = () => {
         setShowModal(true);
@@ -76,7 +64,6 @@ const SSHkey = () => {
                 setKeyName={setKeyName}
                 sshKey={sshKey}
                 setSshKey={setSshKey}
-                handleSendKey={handleSendKey}
             />
         </div>
     );

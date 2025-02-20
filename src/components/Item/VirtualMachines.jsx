@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import MachineSelection from './MachineSelection/MachineSelection';
 import StartButton from './Vmdisplay/StartButton';
 import ShutdownButton from './Vmdisplay/ShutdownButton';
@@ -18,6 +19,16 @@ const VirtualMachines = ({ projectId }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateInterval, setUpdateInterval] = useState(7000);
   const [intervalId, setIntervalId] = useState(null);
+  const [uptimes, setUptimes] = useState({});
+
+  const formatUptime = (uptimeInSeconds) => {
+    const days = Math.floor(uptimeInSeconds / (24 * 3600));
+    const hours = Math.floor((uptimeInSeconds % (24 * 3600)) / 3600);
+    const minutes = Math.floor((uptimeInSeconds % 3600) / 60);
+    const seconds = uptimeInSeconds % 60;
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  };
 
   const fetchVms = async () => {
     try {
@@ -45,6 +56,27 @@ const VirtualMachines = ({ projectId }) => {
     }
   };
 
+  const fetchMetrics = async (vm_id) => {
+    try {
+      const response = await fetch(`${apiUrl}/v1/vm/metrics?vmid=${vm_id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      if (data.metrics.length > 0) {
+        setUptimes(prev => ({ ...prev, [vm_id]: data.metrics[0].uptime }));
+      }
+    } catch (error) {
+      console.error('Ошибка при получении метрик:', error);
+    }
+  };
+
   useEffect(() => {
     fetchVms(); 
 
@@ -56,9 +88,19 @@ const VirtualMachines = ({ projectId }) => {
     return () => clearInterval(id); 
   }, [projectId, updateInterval]);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      vms.forEach(vm => {
+        fetchMetrics(vm.vm_id);
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [vms]);
+
   const handleButtonClick = () => {
     setIsUpdating(true);
-    setUpdateInterval(500);
+    setUpdateInterval(1000);
 
     if (intervalId) {
       clearInterval(intervalId);
@@ -66,7 +108,7 @@ const VirtualMachines = ({ projectId }) => {
 
     const id = setInterval(() => {
       fetchVms();
-    }, 500);
+    }, 1000);
     setIntervalId(id);
 
     setTimeout(() => {
@@ -75,9 +117,9 @@ const VirtualMachines = ({ projectId }) => {
       fetchVms();
       const newId = setInterval(() => {
         fetchVms();
-      }, 7000);
+      }, 1000);
       setIntervalId(newId);
-    }, 30000);
+    }, 22000);
   };
 
   const isButtonDisabled = (status, action) => {
@@ -107,9 +149,12 @@ const VirtualMachines = ({ projectId }) => {
           vms.map(vm => (
             <div className="vm-item" key={vm.vm_id}>
               <div className="vm-header">
-                <p>{vm.vm_purpose}</p>
-                <SettingsButton title="Настройки" vm_id={vm.vm_id}  />
-              </div> 
+                <div className="vm-purpose-uptime">
+                  <p>{vm.vm_purpose}</p>
+                  <p>Uptime: {formatUptime(uptimes[vm.vm_id] || 0)}</p>
+                </div>
+                <SettingsButton title="Настройки" vm_id={vm.vm_id} />
+              </div>
               {vm.configuration.map((config, index) => (
                 <div key={index}>
                   <p>CPU: {config.cpu}</p>

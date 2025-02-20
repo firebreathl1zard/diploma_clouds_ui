@@ -55,7 +55,7 @@ function AuthorizationPages({ setData }) {
         return;
       }
 
-      setToken(data.token);
+      // setToken(data.token);
       setSuccessMessage('Успешная авторизация!');
       dispatch(loginSuccess());
       setError('');

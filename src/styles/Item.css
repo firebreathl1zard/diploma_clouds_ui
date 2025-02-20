@@ -70,7 +70,11 @@
     width: 100%; 
 }
 
-/* .machine-selection-container > div {
-    flex: 1; 
-    margin: 0 ; 
-} */
+.status-indicator {
+  width: 12px; /* Фиксированная ширина */
+  height: 12px; /* Фиксированная высота */
+  border-radius: 50%; /* Круглая форма */
+  margin-left: 0px; /* Отступ слева для разделения */
+  min-width: 12px;
+  min-height: 12px;
+}

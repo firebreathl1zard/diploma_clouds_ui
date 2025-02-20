@@ -19,7 +19,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
       i.id === item.id
         ? {
             ...i,
-            x: isInsideBoard ? clientX - 25 : clientX - 25,
+            x: isInsideBoard ? clientX - 250 : clientX - 25,
             y: isInsideBoard ? clientY - 25 : clientY - 25,
             isDragging: true,
           }

@@ -32,10 +32,10 @@ const Profile = () => {
       console.log("User  logged out");
       dispatch(unauthorized());
 
-      localStorage.removeItem('items');
-      // localStorage.clear();
+      // localStorage.removeItem('items');
+      localStorage.clear();
 
-      window.location.href = '/';
+      window.location.href = '/login';
     } catch (error) {
       console.error('Error during logout:', error);
     }
@@ -46,6 +46,9 @@ const Profile = () => {
       try {
         const response = await fetch(`${apiUrl}/v1/user/login`, {
           method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
           credentials: 'include',
         });
 
@@ -90,9 +93,6 @@ const Profile = () => {
           <div style={{ marginBottom: '10px' }}>
             <strong>Role:</strong> {userData.role}
           </div>
-          <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <button style={{ marginBottom: '10px' }}>Projects</button>
-          </Link>
           <SSHkey />
           <button onClick={handleLogout} style={{ marginTop: '10px' }}>
             Выйти
