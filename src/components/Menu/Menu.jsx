@@ -7,7 +7,10 @@ import Board from '../Board';
 
 const Menu = () => {
   const items = useMenuItems(); 
-  const [localItems, setLocalItems] = useState(items); 
+  const [localItems, setLocalItems] = useState(() => {
+    const savedItems = localStorage.getItem('items');
+    return savedItems ? JSON.parse(savedItems) : [];
+  }); 
   const [itemes, setItemes] = useState([]);
 
   const isDragging = useRef(false);  
@@ -24,13 +27,20 @@ const Menu = () => {
   const boardRef = useRef(null);
 
   useEffect(() => {
-    setLocalItems(items);
-  }, [items]); 
+    if (localItems.length === 0) {
+      setLocalItems(items);
+    }
+  }, [items, localItems]);
 
-  const snapToGrid = (x, y) => {
-    const snappedX = Math.max(minX, Math.min(maxX, Math.round(x / gridWidth) * gridWidth));
-    const snappedY = Math.max(minY, Math.min(maxY, Math.round(y / gridHeight) * gridHeight));
-    return { snappedX, snappedY };
+  useEffect(() => {
+    localStorage.setItem('items', JSON.stringify(localItems));
+  }, [localItems]);
+
+  const handleItemDoubleClick = (itemId) => {
+    const updatedItems = localItems.map((item) => 
+      item.id === itemId ? { ...item, expanded: !item.expanded } : item
+    );
+    setLocalItems(updatedItems);
   };
 
   const handleOnDragEnd = (result) => {    
@@ -40,7 +50,19 @@ const Menu = () => {
     const [reorderedItem] = itemsCopy.splice(result.source.index, 1);
     itemsCopy.splice(result.destination.index, 0, reorderedItem);
 
-    setLocalItems(itemsCopy);  
+    const updatedItems = itemsCopy.map((item, index) => ({
+      ...item,
+      x: item.x,
+      y: item.y,
+    }));
+
+    setLocalItems(updatedItems);  
+  };
+
+  const snapToGrid = (x, y) => {
+    const snappedX = Math.max(minX, Math.min(maxX, Math.round(x / gridWidth) * gridWidth));
+    const snappedY = Math.max(minY, Math.min(maxY, Math.round(y / gridHeight) * gridHeight));
+    return { snappedX, snappedY };
   };
 
   return (
@@ -59,6 +81,7 @@ const Menu = () => {
         boardOccupiedSpace={boardOccupiedSpace}
         setBoardOccupiedSpace={setBoardOccupiedSpace}
         boardRef={boardRef}
+        handleItemDoubleClick={handleItemDoubleClick}
       />
       <Board 
         items={itemes} 

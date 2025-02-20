@@ -1,7 +1,7 @@
 import React from 'react';
 import stopImage from '../../../images/iconfinder-pause-stop-button-player-music-4593160_122283.png';
 
-const StopButton = ({ onClick, isLoading, vm_id }) => {
+const StopButton = ({ onClick, isLoading, vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const handleClick = async () => {
     if (window.confirm("Вы уверены, что хотите остановить?")) {
@@ -37,8 +37,8 @@ const StopButton = ({ onClick, isLoading, vm_id }) => {
     <button 
       title="Остановить"
       onClick={handleClick} 
-      className={`action-button ${isLoading ? 'loading' : ''}`}
-      disabled={isLoading}
+      className={`action-button ${isLoading ? 'loading' : ''} ${disabled ? 'disabled-button' : ''}`}
+      disabled={isLoading || disabled} 
     >
       <img src={stopImage} alt="Stop" />
     </button>

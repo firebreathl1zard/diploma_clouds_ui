@@ -1,7 +1,7 @@
 import React from 'react';
 import resetImage from '../../../images/reset_hard_icon_246243.png';
 
-const ResetButton = ({ onClick, isLoading, vm_id }) => {
+const ResetButton = ({ onClick, isLoading, vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const handleClick = async () => {
     if (window.confirm("Вы уверены, что хотите сбросить?")) {
@@ -37,8 +37,8 @@ const ResetButton = ({ onClick, isLoading, vm_id }) => {
     <button 
       title="Сбросить"
       onClick={handleClick} 
-      className={`action-button ${isLoading ? 'loading' : ''}`}
-      disabled={isLoading}
+      className={`action-button ${isLoading ? 'loading' : ''} ${disabled ? 'disabled-button' : ''}`}
+      disabled={isLoading || disabled} 
     >
       <img src={resetImage} alt="Reset" />
     </button>

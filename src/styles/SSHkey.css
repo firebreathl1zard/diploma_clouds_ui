@@ -1,72 +1,137 @@
 .ssh-container {
     font-family: Arial, sans-serif;
-    
 }
 
-.toggle-inputs-btn {
-    margin-bottom: 10px;
+.settings-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.2s;
 }
 
-.input-container {
+.settings-button:hover {
+    transform: scale(1.1);
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-.input-fields {
-    flex-grow: 1;
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 500px;
+    min-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
 }
 
-.input-fields input,
-.input-fields textarea {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #888;
+}
+
+.close-button:hover {
+    color: #000;
+}
+
+h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+    color: #333;
+}
+
+h3 {
+    margin: 10px 0;
+    font-size: 20px;
+    color: #555;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
-.save-key-btn {
-    margin-left: 10px;
-    padding: 8px 12px;
-    background-color: #4CAF50;
-    color: white;
+li:hover {
+    background-color: #f0f0f0;
+}
+
+.selected-key {
+    background-color: #e0f7fa;
+    border: 1px solid #00796b;
+    border-radius: 4px; 
+    padding: 8px;
+}
+
+button {
+    padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.save-key-btn:hover {
+button:hover {
+    opacity: 0.9;
+}
+
+button:focus {
+    outline: none;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.confirmation {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.confirmation p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.confirmation button {
+    margin: 0 5px;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.confirmation button:hover {
     background-color: #45a049;
 }
 
-.ssh-keys-list {
-    margin-top: 20px;
-}
-
-.ssh-key-block {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 4px;
-}
-
-.delete-key-btn {
-    margin-left: 10px;
-    padding: 5px 10px;
+.confirmation .cancel-button {
     background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
-.delete-key-btn:hover {
+.confirmation .cancel-button:hover {
     background-color: #d32f2f;
 }
-
-.key-icon {
-    margin-left: 10px }

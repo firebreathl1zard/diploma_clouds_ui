@@ -5,26 +5,29 @@ import '../styles/Item.css';
 import Title from './Item/Title';
 import Team from './Item/Team';
 import Investment from './Item/Investment';
-// import Metrics from './Item/Metrics';
 import MachineSelection from './Item/MachineSelection/MachineSelection';
 import PaymentButton from './Item/PaymentButton';
 import Logs from './Item/Logs';
 import VirtualMachines from './Item/VirtualMachines';
 
 const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemDoubleClick, isChild }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(item.expanded);
   const [isDragging, setIsDragging] = useState(false);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
-  const [metrics, setMetrics] = useState('');
   const [investmentAmount, setInvestmentAmount] = useState('');
   const [selectedMachine, setSelectedMachine] = useState('');
   const [logs, setLogs] = useState([]);
   const [team, setTeam] = useState('[Enter Team Here]');
+  const [vmStatus, setVmStatus] = useState({ purpose: '', status: '' });
+  const [hasVmInfo, setHasVmInfo] = useState(false);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleExpand = () => {
-    setIsExpanded(!isExpanded);
-    handleItemDoubleClick(item.id);
+    if (isChild) {
+      setIsExpanded(!isExpanded);  
+      handleItemDoubleClick(item.id);
+    }
   };
 
   useEffect(() => {
@@ -38,6 +41,53 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [isDragging, item, handleItemDragStart, offsetX, offsetY]);
+
+  useEffect(() => {
+    const fetchVmData = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/v1/project/${item.id}/vms`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+        const data = await response.json();
+        
+        if (data.vminfo && data.vminfo.length > 0) {
+          const { status, vm_purpose } = data.vminfo[0];
+          setVmStatus({ purpose: vm_purpose, status });
+        } else {
+          setVmStatus({ purpose: '', status: undefined });
+        }
+      } catch (error) {
+        console.error('Error fetching VM data:', error);
+      }
+    };
+
+    fetchVmData();
+
+    const intervalId = setInterval(fetchVmData, 500);
+    return () => clearInterval(intervalId);
+  }, [item.id]);
+
+const getStatusColor = (status) => {
+    if (status === undefined) {
+        return 'grey';
+    }
+
+    switch (status) {
+        case 'running':
+            return 'green';
+        case 'stopped':
+            return 'red';
+        case 'pending':
+            return 'grey';
+        default:
+            return 'yellow';
+    }
+};
+
 
   const handleMouseDown = (event) => {
     setIsDragging(true);
@@ -91,8 +141,15 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
             onDoubleClick={handleExpand}
           >
             <div className="item-content-header">
-              <p><abbr className='item-title' title={item.content}>{item.content}</abbr></p>
-            </div>
+        <abbr className='item-title' title={item.content}>{item.content}</abbr>
+          {!isExpanded && (
+            <span
+              className="status-indicator"
+              style={{ backgroundColor: getStatusColor(vmStatus.status) }}
+              title={`${vmStatus.purpose}:${vmStatus.status}`}
+              />
+            )}
+          </div>
           </div>
           {isExpanded && (
             <div className="item-content">
@@ -105,7 +162,6 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
                 <div className="machine-selection-container">
                   <VirtualMachines projectId={item.id} /> 
                 </div>
-                {/* <Metrics projectId={item.id}/> */}
                 <Investment investmentAmount={investmentAmount} setInvestmentAmount={setInvestmentAmount} project_id={item.id} />
               </div>
               <Logs logs={logs} />

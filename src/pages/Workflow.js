@@ -5,10 +5,8 @@ import Menu from '../components/Menu/Menu';
 import { MenuProvider } from '../hooks/Menu/MenuContext';
 import Profile from '../components/Profile';
 import '../styles/HomePages.css'; 
-const HomePages = () => {
+const WorkflowPages = () => {
   const [items, setItems] = useState([]);
-  // const isDragging = useRef(false);
-  const isDragging = useRef(false);  
 
   const handleOnDragEnd = (result) => {    
     if (!result.destination) return;
@@ -48,4 +46,4 @@ const HomePages = () => {
   );
 };
 
-export { HomePages };
+export { WorkflowPages };

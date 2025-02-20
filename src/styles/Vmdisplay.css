@@ -11,7 +11,7 @@
 
 .vm-item {
   width: 100%;
-  height: 260px;
+  height: 280px;
   margin-bottom: 20px;
   padding: 5px;
   border: 1px solid #333;
@@ -108,4 +108,14 @@
 
 .vm-header p {
   margin: 0; 
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.vm-purpose-uptime {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }

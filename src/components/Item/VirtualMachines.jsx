@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import MachineSelection from './MachineSelection/MachineSelection';
 import StartButton from './Vmdisplay/StartButton';
 import ShutdownButton from './Vmdisplay/ShutdownButton';
@@ -17,6 +18,17 @@ const VirtualMachines = ({ projectId }) => {
   const [vmIds, setVmIds] = useState([]);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateInterval, setUpdateInterval] = useState(7000);
+  const [intervalId, setIntervalId] = useState(null);
+  const [uptimes, setUptimes] = useState({});
+
+  const formatUptime = (uptimeInSeconds) => {
+    const days = Math.floor(uptimeInSeconds / (24 * 3600));
+    const hours = Math.floor((uptimeInSeconds % (24 * 3600)) / 3600);
+    const minutes = Math.floor((uptimeInSeconds % 3600) / 60);
+    const seconds = uptimeInSeconds % 60;
+
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  };
 
   const fetchVms = async () => {
     try {
@@ -44,24 +56,86 @@ const VirtualMachines = ({ projectId }) => {
     }
   };
 
+  const fetchMetrics = async (vm_id) => {
+    try {
+      const response = await fetch(`${apiUrl}/v1/vm/metrics?vmid=${vm_id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      if (data.metrics.length > 0) {
+        setUptimes(prev => ({ ...prev, [vm_id]: data.metrics[0].uptime }));
+      }
+    } catch (error) {
+      console.error('Ошибка при получении метрик:', error);
+    }
+  };
+
   useEffect(() => {
     fetchVms(); 
 
-    const intervalId = setInterval(() => {
+    const id = setInterval(() => {
       fetchVms(); 
     }, updateInterval);
+    setIntervalId(id);
 
-    return () => clearInterval(intervalId); 
+    return () => clearInterval(id); 
   }, [projectId, updateInterval]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      vms.forEach(vm => {
+        fetchMetrics(vm.vm_id);
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [vms]);
 
   const handleButtonClick = () => {
     setIsUpdating(true);
     setUpdateInterval(1000);
 
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+
+    const id = setInterval(() => {
+      fetchVms();
+    }, 1000);
+    setIntervalId(id);
+
     setTimeout(() => {
-      setIsUpdating(false);
+      clearInterval(id);
       setUpdateInterval(7000);
-    }, 30000);
+      fetchVms();
+      const newId = setInterval(() => {
+        fetchVms();
+      }, 1000);
+      setIntervalId(newId);
+    }, 22000);
+  };
+
+  const isButtonDisabled = (status, action) => {
+    const disabledActions = {
+      creating: true,
+      configuring: true,
+      rebooting: true,
+      resetting: true,
+      destroying: true,
+      starting: true,
+      'shutting down': true,
+      stopping: true,
+      running: action === 'start' || action === 'destroy',
+      stopped: action !== 'start' && action !== 'destroy',
+    };
+    return disabledActions[status] || false;
   };
 
   if (error) {
@@ -75,31 +149,66 @@ const VirtualMachines = ({ projectId }) => {
           vms.map(vm => (
             <div className="vm-item" key={vm.vm_id}>
               <div className="vm-header">
-                <p>{vm.vm_purpose}</p>
-                <SettingsButton/>
-              </div> 
+                <div className="vm-purpose-uptime">
+                  <p>{vm.vm_purpose}</p>
+                  <p>Uptime: {formatUptime(uptimes[vm.vm_id] || 0)}</p>
+                </div>
+                <SettingsButton title="Настройки" vm_id={vm.vm_id} />
+              </div>
               {vm.configuration.map((config, index) => (
                 <div key={index}>
                   <p>CPU: {config.cpu}</p>
-                  <div className="load-box" style={{ width: `${config.cpuLoad}%` }}>
-                    {/* <span>{config.cpuLoad}%</span> */}
-                  </div>
+                  <div className="load-box" style={{ width: `${config.cpuLoad}%` }} />
                   <p>RAM: {config.ram}</p>
                   <p>Status: {vm.status}</p>
-                  <div className="load-box" style={{ width: `${config.ramLoad}%` }}>
-                    {/* <span>{config.ramLoad}%</span> */}
-                  </div>
+                  <div className="load-box" style={{ width: `${config.ramLoad}%` }} />
                 </div>
               ))}
               <div className="action-buttons">
-                <StartButton vm_id={vm.vm_id} project_id={projectId} title="Запустить" onClick={handleButtonClick} />
-                <ShutdownButton vm_id={vm.vm_id} project_id={projectId} title="Выключить" onClick={handleButtonClick} />
-                <StopButton vm_id={vm.vm_id} project_id={projectId} title="Остановить" onClick={handleButtonClick} />
-                <RebootButton vm_id={vm.vm_id} project_id={projectId} title="Перезагрузить" onClick={handleButtonClick} />
-                <ResetButton vm_id={vm.vm_id} project_id={projectId} title="Сбросить" onClick={handleButtonClick} />
-                <DestroyButton vm_id={vm.vm_id} project_id={projectId} title="Уничтожить" onClick={handleButtonClick} />
+                <StartButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Запустить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'start')}
+                />
+                <ShutdownButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Выключить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'shutdown')}
+                />
+                <StopButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Остановить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'stop')}
+                />
+                <RebootButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Перезагрузить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'reboot')}
+                />
+                <ResetButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Сбросить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'reset')}
+                />
+                <DestroyButton 
+                  vm_id={vm.vm_id} 
+                  project_id={projectId} 
+                  title="Уничтожить" 
+                  onClick={handleButtonClick} 
+                  disabled={isButtonDisabled(vm.status, 'destroy')}
+                />
               </div>
-              <Metrics vm_id={vm.vm_id}/>
+              {vm.status !== 'creating' && <Metrics vm_id={vm.vm_id} status={vm.status} />}
             </div>
           ))
         ) : (

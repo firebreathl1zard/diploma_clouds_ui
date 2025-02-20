@@ -1,0 +1,70 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 90%; /* Максимальная ширина 90% от экрана */
+    width: auto; /* Автоматическая ширина в зависимости от содержимого */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.tabs button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: none;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.tabs button:hover {
+    background-color: #f0f0f0;
+}
+
+.tabs button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.tab-content {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+h2, h3 {
+    margin: 0 0 10px;
+}
+
+ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+pre {
+    background-color: #f0f0f0;
+    padding: 5px;
+    border-radius: 4px;
+    overflow-x: auto;
+}

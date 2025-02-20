@@ -1,7 +1,7 @@
 import React from 'react';
 import shutdownImage from '../../../images/close-button_icon-icons.com_72803.png';
 
-const ShutdownButton = ({ onClick, isLoading, vm_id }) => {
+const ShutdownButton = ({ onClick, isLoading, vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const handleClick = async () => {
     if (window.confirm("Вы уверены, что хотите выключить?")) {
@@ -37,8 +37,8 @@ const ShutdownButton = ({ onClick, isLoading, vm_id }) => {
     <button 
       title="Выключить"
       onClick={handleClick} 
-      className={`action-button ${isLoading ? 'loading' : ''}`}
-      disabled={isLoading}
+      className={`action-button ${isLoading ? 'loading' : ''} ${disabled ? 'disabled-button' : ''}`}
+      disabled={isLoading || disabled} 
     >
       <img src={shutdownImage} alt="Shutdown" />
     </button>
