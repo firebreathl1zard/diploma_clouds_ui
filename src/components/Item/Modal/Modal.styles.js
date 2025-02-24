@@ -17,7 +17,7 @@ export const modalStyles = {
       padding: '10px',
     },
     modal: {
-      background: 'white',
+      background: 'rgb(39, 38, 51)',
       padding: '20px',
       borderRadius: '5px',
       width: '400px',
@@ -27,8 +27,10 @@ export const modalStyles = {
       margin : '0 0 10px',
       fontSize: '24px',
       fontWeight: 'bold',
+      color: '#fff',
     },
     subtitle: {
+      color: '#fff',
       margin: '0 0 15px',
       fontSize: '18px',
       fontWeight: '600',
@@ -104,6 +106,7 @@ export const modalStyles = {
       transition: 'opacity 0.3s',
     },
     closeButton: {
+      color: '#fff',
       position: 'flex',
       top: '10px',
       left: '10px',

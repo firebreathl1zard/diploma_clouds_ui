@@ -20,8 +20,8 @@ export const MenuProvider = ({ children }) => {
       const formattedItems = data.projects.map((project, index) => ({
         id: project.project_id.toString(),
         content: project.title,
-        x: 0,
-        y: index * 50,
+        x: 20,
+        y: 60 + index * 60,
         isDragging: false,
         expanded: false,
         parentId: null,

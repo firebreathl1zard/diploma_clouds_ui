@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; 
 import SSHkey from './SSHkey';
-import profileImage from '../images/ui_user_profile_avatar_person_icon_208734.png';
+import profileImage from '../images/profile-btn.png';
 import { useDispatch } from 'react-redux';
 import { unauthorized } from '../pages/authSlice';
 

@@ -2,12 +2,14 @@ import React, { useRef, useState } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Item from '../Item';
 
-const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, maxY, lastActiveItem, setLastActiveItem, boardOccupiedSpace, boardRef }) => {
+const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, maxY, lastActiveItem, setLastActiveItem, boardOccupiedSpace, boardRef,handleDuplicateItem, onItemDragEnd, draggedItemId, setDraggedItemId }) => {
   const [offsetY, setOffsetY] = useState(0);
   const itemWidth = 100;
   const itemHeight = 100;
 
   const handleItemDragStart = (item, event) => {
+    setDraggedItemId(item.id);
+    // console.log('dragging');
     const { clientX, clientY } = event;
   
     const boardElement = boardRef.current;
@@ -19,8 +21,8 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
       i.id === item.id
         ? {
             ...i,
-            x: isInsideBoard ? clientX - 250 : clientX - 25,
-            y: isInsideBoard ? clientY - 25 : clientY - 25,
+            x: isInsideBoard ? clientX - 300 : clientX - 25,
+            y: isInsideBoard ? clientY - 65 : clientY - 25,
             isDragging: true,
           }
         : i
@@ -29,7 +31,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
     setItems(updatedItems);
     isDragging.current = true;
   };
-
+  // console.log('123')
   const handleItemDrag = (item, event) => {
     const { clientX, clientY } = event;
 
@@ -76,32 +78,37 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
     }
   };
   
+
+  
   const handleItemDragEnd = (item) => {
+    // console.log(setDraggedItemId)
     const isInsideGrid = isItemInsideBoard(item.x, item.y);
     const boardElement = boardRef.current; 
     const itemElement = document.getElementById(item.id); 
     const isInsideBoard = boardElement && boardElement.contains(itemElement);
-  
-    if (isInsideGrid) {
-      moveItemToBoard(item);
+
+    if (!isInsideGrid) {
+        const duplicateId = `${item.id}с`;
+        const duplicateItem = items.find(i => i.id === duplicateId);
+
+        if (duplicateItem) {
+
+            const updatedItems = items.map((i) =>
+                i.id === item.id
+                    ? { ...i, x: duplicateItem.x, y: duplicateItem.y }
+                    : i
+            );
+
+            const finalItems = updatedItems.filter(i => i.id !== duplicateId);
+
+            setItems(finalItems);
+
+            localStorage.setItem('items', JSON.stringify(finalItems));
+        } else {
+            console.warn(`Duplicate item with id ${duplicateId} not found.`);
+        }
     }
-  
-    const updatedItems = items.map((i) =>
-      i.id === item.id
-        ? {
-            ...i,
-            // x: isInsideBoard ? item.x : item.x - 250,
-            x: item.x,
-            y: item.y,
-            isDragging: false,
-          }
-        : i
-    );
-  
-    setItems(updatedItems);
-    isDragging.current = false;
-    setLastActiveItem({ x: item.x, y: item.y });
-  };
+};
 
   const handleItemDoubleClick = (itemId) => {
     setItems(items.map((item) => (item.id === itemId ? { ...item, expanded: !item.expanded } : item)));
@@ -117,8 +124,8 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
             display: 'flex',
             flexDirection: 'column',
             height: '700px', 
-            minWidth: '200px', 
-            border: '1px solid black',
+            minWidth: '250px', 
+            // border: '1px solid black',
             overflow: 'scroll',
           }}
         >
@@ -134,6 +141,8 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
                 handleItemDragEnd={handleItemDragEnd}
                 handleItemDoubleClick={handleItemDoubleClick}
                 isChild={isChild}
+                handleDuplicateItem={handleDuplicateItem}
+                draggedItemId={draggedItemId}
               />
             );
           })}

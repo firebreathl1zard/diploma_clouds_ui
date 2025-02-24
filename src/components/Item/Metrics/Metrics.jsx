@@ -24,8 +24,12 @@ const Metrics = ({ vm_id, status }) => {
       }
     };
 
-    if (status === 'stopped') {
-      setMetrics([{ vmid: vm_id, cpu: 0, mem: 0, maxmem: 1 }]);
+    if (['creating', 'configuring', 'shutting down', 'stopped'].includes(status)) {
+      if (status === 'stopped') {
+        setMetrics([{ vmid: vm_id, cpu: 0, mem: 0, maxmem: 1 }]);
+      } else {
+        setMetrics([{ vmid: vm_id, cpu: 0, mem: 0, maxmem: 1 }]); 
+      }
     } else {
       fetchMetrics();
       const intervalId = setInterval(fetchMetrics, 1000);
@@ -40,8 +44,8 @@ const Metrics = ({ vm_id, status }) => {
     return (
       <div style={{ marginBottom: '4px' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: '4px' }}>{label}: {Math.round(percentage)}%</span>
-          <div style={{ flex: 1, height: '20px', backgroundColor: '#e0e0e0', borderRadius: '4px', overflow: 'hidden' }}>
+          <span style={{ marginRight: '4px' }}>{label}:</span>
+          <div style={{ flex: 1, height: '14px', backgroundColor: '#e0e0e0', borderRadius: '4px', overflow: 'hidden', marginRight: '4px' }}>
             <div style={{
               height: '100%',
               width: `${percentage}%`,
@@ -49,6 +53,7 @@ const Metrics = ({ vm_id, status }) => {
               transition: 'width 0.5s ease-in-out'
             }} />
           </div>
+          <span>{Math.round(percentage)}%</span>
         </div>
       </div>
     );
@@ -58,11 +63,8 @@ const Metrics = ({ vm_id, status }) => {
     <div
       style={{
         marginTop: '12px',
-        border: '1px solid #333',
-        borderRadius: '4px',
-        padding: '8px',
         minHeight: '30px',
-        backgroundColor: '#fff',
+        backgroundColor: '#534F73',
         width: '100%',
         wordWrap: 'break-word',
       }}
@@ -70,7 +72,7 @@ const Metrics = ({ vm_id, status }) => {
       {metrics.map((metric) => (
         <div key={metric.vmid}>
           {renderMetricBar('CPU', metric.cpu * 100, 100)} 
-          {renderMetricBar('MEM', metric.mem, metric.maxmem)}
+          {renderMetricBar('RAM', metric.mem, metric.maxmem)}
         </div>
       ))}
     </div>

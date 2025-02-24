@@ -7,6 +7,7 @@ import Board from '../Board';
 
 const Menu = () => {
   const items = useMenuItems(); 
+  const [draggedItemId, setDraggedItemId] = useState(null);
   const [localItems, setLocalItems] = useState(() => {
     const savedItems = localStorage.getItem('items');
     return savedItems ? JSON.parse(savedItems) : [];
@@ -42,6 +43,23 @@ const Menu = () => {
     );
     setLocalItems(updatedItems);
   };
+  
+  const handleDuplicateItem = (newItem) => {
+    const duplicateExists = localItems.some(item => item.id === newItem.id);
+    const idEndsWithL = newItem.id.endsWith('l');
+  
+    if (!duplicateExists) {
+      setLocalItems((prevItems) => [...prevItems, newItem]);
+    } else if (duplicateExists) {
+      console.warn(`Duplicate item with id ${newItem.id} already exists.`);
+    } else if (idEndsWithL) {
+      console.warn(`Item with id ${newItem.id} ends with 'l' and will not be added.`);
+    }
+  };
+  
+  // const handleItemDragStart = (item) => {
+  //   setDraggedItemId(item.id);
+  // };
 
   const handleOnDragEnd = (result) => {    
     if (!result.destination) return;
@@ -55,14 +73,17 @@ const Menu = () => {
       x: item.x,
       y: item.y,
     }));
-
     setLocalItems(updatedItems);  
+    
   };
 
   const snapToGrid = (x, y) => {
     const snappedX = Math.max(minX, Math.min(maxX, Math.round(x / gridWidth) * gridWidth));
     const snappedY = Math.max(minY, Math.min(maxY, Math.round(y / gridHeight) * gridHeight));
     return { snappedX, snappedY };
+  };
+
+  const handleItemDragEnd = (item) => {
   };
 
   return (
@@ -82,6 +103,10 @@ const Menu = () => {
         setBoardOccupiedSpace={setBoardOccupiedSpace}
         boardRef={boardRef}
         handleItemDoubleClick={handleItemDoubleClick}
+        handleDuplicateItem={handleDuplicateItem}
+        onItemDragEnd={handleItemDragEnd}
+        draggedItemId={draggedItemId}
+        setDraggedItemId={setDraggedItemId}
       />
       <Board 
         items={itemes} 
@@ -90,6 +115,7 @@ const Menu = () => {
         boardOccupiedSpace={boardOccupiedSpace}
         setBoardOccupiedSpace={setBoardOccupiedSpace}
         boardRef={boardRef}
+        draggedItemId={draggedItemId}
       />
     </DragDropContext>
   );

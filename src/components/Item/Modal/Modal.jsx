@@ -30,18 +30,19 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
           {vmConfigurations.length > 0 ? (
             vmConfigurations.map((vm) => (
               <div key={vm.id} style={modalStyles.vmItem}>
-                <div
-                  onClick={() => {
-                    setSelectedVMState(vm); 
-                    setSelectedVM(vm);
-                  }}
-                  style={{
-                    ...modalStyles.vmName,
-                    backgroundColor: selectedVM === vm ? '#e0f7fa' : 'transparent', 
-                  }}
-                >
+                <label style={{ ...modalStyles.vmName, backgroundColor: selectedVM === vm ? '#e0f7fa' : 'transparent' }}>
+                  <input
+                    type="radio"
+                    name="vmConfiguration"
+                    checked={selectedVM === vm}
+                    onChange={() => {
+                      setSelectedVMState(vm);
+                      setSelectedVM(vm);
+                    }}
+                    style={{ marginRight: '10px' }}
+                  />
                   {vm.id}. {vm.name}
-                </div>
+                </label>
               </div>
             ))
           ) : (
@@ -64,12 +65,41 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
         </div>
 
         <h3 style={modalStyles.subtitle}>Выберите назначение:</h3>
-        <select value={purpose} onChange={(e) => setPurpose(e.target.value)} style={modalStyles.purposeSelect}>
-          <option value="">-- Выберите назначение --</option>
-          <option value="FE">Frontend</option>
-          <option value="BE">Backend</option>
-          <option value="DB">Database</option>
-        </select>
+        <div>
+          <label>
+            <input
+              type="radio"
+              name="purpose"
+              value="FE"
+              checked={purpose === 'FE'}
+              onChange={(e) => setPurpose(e.target.value)}
+              style={{ marginRight: '10px' }}
+            />
+            Frontend
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="purpose"
+              value="BE"
+              checked={purpose === 'BE'}
+              onChange={(e) => setPurpose(e.target.value)}
+              style={{ marginRight: '10px' }}
+            />
+            Backend
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="purpose"
+              value="DB"
+              checked={purpose === 'DB'}
+              onChange={(e) => setPurpose(e.target.value)}
+              style={{ marginRight: '10px' }}
+            />
+            Database
+          </label>
+        </div>
 
         <div style={modalStyles.buttonContainer}>
           <button onClick={handleConfirm} style={modalStyles.okButton}>

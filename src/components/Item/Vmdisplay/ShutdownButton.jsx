@@ -1,5 +1,5 @@
 import React from 'react';
-import shutdownImage from '../../../images/close-button_icon-icons.com_72803.png';
+import shutdownImage from '../../../images/Property 1=Default.png';
 
 const ShutdownButton = ({ onClick, isLoading, vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;

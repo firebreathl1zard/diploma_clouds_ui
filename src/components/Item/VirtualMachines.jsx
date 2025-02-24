@@ -26,8 +26,8 @@ const VirtualMachines = ({ projectId }) => {
     const hours = Math.floor((uptimeInSeconds % (24 * 3600)) / 3600);
     const minutes = Math.floor((uptimeInSeconds % 3600) / 60);
     const seconds = uptimeInSeconds % 60;
-
-    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    return days > 0 ? `${days}d ${formattedTime}` : formattedTime;
   };
 
   const fetchVms = async () => {
@@ -56,7 +56,12 @@ const VirtualMachines = ({ projectId }) => {
     }
   };
 
-  const fetchMetrics = async (vm_id) => {
+  const fetchMetrics = async (vm_id, status) => {
+    if (['creating', 'configuring', 'shutting down', 'stopped'].includes(status)) {
+      setUptimes(prev => ({ ...prev, [vm_id]: 0 }));
+      return;
+    }
+
     try {
       const response = await fetch(`${apiUrl}/v1/vm/metrics?vmid=${vm_id}`, {
         method: 'GET',
@@ -91,7 +96,7 @@ const VirtualMachines = ({ projectId }) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       vms.forEach(vm => {
-        fetchMetrics(vm.vm_id);
+        fetchMetrics(vm.vm_id, vm.status); 
       });
     }, 1000);
 
@@ -138,6 +143,17 @@ const VirtualMachines = ({ projectId }) => {
     return disabledActions[status] || false;
   };
 
+  const getBorderColor = (status) => {
+    switch (status) {
+      case 'running':
+        return '#25C230';
+      case 'stopped':
+        return '#7C7A8C';
+      default:
+        return 'yellow';
+    }
+  };
+
   if (error) {
     return <div className="error-message">Ошибка: {error}</div>; 
   }
@@ -147,77 +163,117 @@ const VirtualMachines = ({ projectId }) => {
       <div className="vms-list">
         {vms.length > 0 ? (
           vms.map(vm => (
-            <div className="vm-item" key={vm.vm_id}>
+            <div className="vm-item" key={vm.vm_id} style={{ border: `2px solid ${getBorderColor(vm.status)}` }}>
               <div className="vm-header">
                 <div className="vm-purpose-uptime">
                   <p>{vm.vm_purpose}</p>
-                  <p>Uptime: {formatUptime(uptimes[vm.vm_id] || 0)}</p>
+                  <p>{formatUptime(uptimes[vm.vm_id] || 0)}</p>
                 </div>
-                <SettingsButton title="Настройки" vm_id={vm.vm_id} />
+                <SettingsButton 
+                  title="Настройки" 
+                  vm_id={vm.vm_id} 
+                  projectId={projectId} 
+                  cpu={vm.configuration[0].cpu}
+                  ram={vm.configuration[0].ram}
+                  buttons={{
+                    stop: {
+                      title: "Остановить",
+                      disabled: isButtonDisabled(vm.status, 'stop'),
+                      onClick: handleButtonClick,
+                    },
+                    reset: {
+                      title: "Сбросить",
+                      disabled: isButtonDisabled(vm.status, 'reset'),
+                      onClick: handleButtonClick,
+                    },
+                    destroy: {
+                      title: "Уничтожить",
+                      disabled: isButtonDisabled(vm.status, 'destroy'),
+                      onClick: handleButtonClick,
+                    },
+                  }}
+                />
               </div>
+              <Metrics vm_id={vm.vm_id} status={vm.status} />
               {vm.configuration.map((config, index) => (
                 <div key={index}>
-                  <p>CPU: {config.cpu}</p>
                   <div className="load-box" style={{ width: `${config.cpuLoad}%` }} />
-                  <p>RAM: {config.ram}</p>
                   <p>Status: {vm.status}</p>
                   <div className="load-box" style={{ width: `${config.ramLoad}%` }} />
                 </div>
               ))}
               <div className="action-buttons">
-                <StartButton 
-                  vm_id={vm.vm_id} 
-                  project_id={projectId} 
-                  title="Запустить" 
-                  onClick={handleButtonClick} 
-                  disabled={isButtonDisabled(vm.status, 'start')}
-                />
-                <ShutdownButton 
-                  vm_id={vm.vm_id} 
-                  project_id={projectId} 
-                  title="Выключить" 
-                  onClick={handleButtonClick} 
-                  disabled={isButtonDisabled(vm.status, 'shutdown')}
-                />
-                <StopButton 
-                  vm_id={vm.vm_id} 
-                  project_id={projectId} 
-                  title="Остановить" 
-                  onClick={handleButtonClick} 
-                  disabled={isButtonDisabled(vm.status, 'stop')}
-                />
-                <RebootButton 
-                  vm_id={vm.vm_id} 
-                  project_id={projectId} 
-                  title="Перезагрузить" 
-                  onClick={handleButtonClick} 
-                  disabled={isButtonDisabled(vm.status, 'reboot')}
-                />
-                <ResetButton 
-                  vm_id={vm.vm_id} 
-                  project_id={projectId} 
-                  title="Сбросить" 
-                  onClick={handleButtonClick} 
-                  disabled={isButtonDisabled(vm.status, 'reset')}
-                />
-                <DestroyButton 
-                  vm_id={vm.vm_id} 
-                  project_id={projectId} 
-                  title="Уничтожить" 
-                  onClick={handleButtonClick} 
-                  disabled={isButtonDisabled(vm.status, 'destroy')}
-                />
+                {vm.status === 'starting' || vm.status === 'running' ? (
+                  <>
+                    <ShutdownButton 
+                      vm_id={vm.vm_id} 
+                      project_id={projectId} 
+                      title="Выключить" 
+                      onClick={handleButtonClick} 
+                      disabled={isButtonDisabled(vm.status, 'shutdown')}
+                    />
+                    <RebootButton 
+                      vm_id={vm.vm_id} 
+                      project_id={projectId} 
+                      title="Перезагрузить" 
+                      onClick={handleButtonClick} 
+                      disabled={isButtonDisabled(vm.status, 'reboot')}
+                    />
+                  </>
+                ) : vm.status === 'shutting down' || vm.status === 'stopped' ? (
+                  <>
+                    <StartButton 
+                      vm_id={vm.vm_id} 
+                      project_id={projectId} 
+                      title="Включить" 
+                      onClick={handleButtonClick} 
+                      disabled={isButtonDisabled(vm.status, 'start')}
+                    />
+                    <RebootButton 
+                      vm_id={vm.vm_id} 
+                      project_id={projectId} 
+                      title="Перезагрузить" 
+                      onClick={handleButtonClick} 
+                      disabled={isButtonDisabled(vm.status, 'reboot')}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <StartButton 
+                      vm_id={vm.vm_id} 
+                      project_id={projectId} 
+                      title="Запустить" 
+                      onClick={handleButtonClick} 
+                      disabled={isButtonDisabled(vm.status, 'start')}
+                    />
+                    <ShutdownButton 
+                      vm_id={vm.vm_id} 
+                      project_id={projectId} 
+                      title="Выключить" 
+                      onClick={handleButtonClick} 
+                      disabled={isButtonDisabled(vm.status, 'shutdown')}
+                    />
+                    <RebootButton 
+                      vm_id={vm.vm_id} 
+                      project_id={projectId} 
+                      title="Перезагрузить" 
+                      onClick={handleButtonClick} 
+                      disabled={isButtonDisabled(vm.status, 'reboot')}
+                    />
+                  </>
+                )}
               </div>
-              {vm.status !== 'creating' && <Metrics vm_id={vm.vm_id} status={vm.status} />}
             </div>
           ))
         ) : (
-          <p>No virtual machines available.</p>
+          console.log('No virtual machines available.')
         )}
       </div>
-      <div className="machine-selection-container">
-        <MachineSelection project_id={projectId} />
-      </div>
+      {vms.length < 3 && (
+        <div className="machine-selection-container">
+          <MachineSelection project_id={projectId} />
+        </div>
+      )}
     </div>
   );
 };

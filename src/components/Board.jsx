@@ -2,9 +2,10 @@ import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Item from './Item';
 
-const Board = ({ items, setItems, isDragging, boardOccupiedSpace, setBoardOccupiedSpace, boardRef}) => {
+const Board = ({ items, setItems, isDragging, boardOccupiedSpace, setBoardOccupiedSpace, boardRef,draggedItemId}) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: 0, height: 0 });
+  const [draggingItemId, setDraggingItemId] = useState(null);
 
   const updatePositionAndSize = () => {
     if (boardRef.current) {
@@ -92,13 +93,16 @@ const Board = ({ items, setItems, isDragging, boardOccupiedSpace, setBoardOccupi
           ref={boardRef}
           {...provided.droppableProps}
           style={{
+            marginTop: '60px',
             display: 'flex',
             flexDirection: 'column',
             minHeight: '700px',
             width: '100%',
-            border: '1px solid black',
-            // zIndex: '1',
+            // border: '1px solid black',
+            // zIndex: '-1',
             position: 'relative',
+            backgroundColor: '#14131C',
+            borderRadius: '50px',
           }}
         >
           {/* <div>
@@ -115,6 +119,7 @@ const Board = ({ items, setItems, isDragging, boardOccupiedSpace, setBoardOccupi
               handleItemDrag={handleItemDrag}
               handleItemDragEnd={handleItemDragEnd}
               handleItemDoubleClick={handleItemDoubleClick}
+              draggedItemId={draggedItemId}
             />
           ))}
           {provided.placeholder}

@@ -15,7 +15,6 @@ const Investment = ({ investmentAmount, project_id }) => {
           credentials: 'include',
         });
         const data = await response.json();
-        // console.log('Полученные данные:', data);
         setFinances(data.finances);
       } catch (error) {
         console.error('Ошибка при получении данных:', error);
@@ -27,21 +26,21 @@ const Investment = ({ investmentAmount, project_id }) => {
   }, [investmentAmount, project_id]); 
 
   return (
-    <div>
-      <div style={{ marginBottom: '5px', fontWeight: 'bold' }}>Финансы:</div>
+    <div style={{display: 'flex', flexDirection: 'row', fontSize: '11px'}}>
+      <div style={{}}>Финансы:</div>
       <div
         style={{
-          border: '1px solid #ccc',
-          borderRadius: '4px',
-          padding: '8px',
-          minHeight: '25px',
-          backgroundColor: '#f9f9f9',
-          width: '20%',
-          fontWeight: 'bold',
+          // border: '1px solid #ccc',
+          // borderRadius: '4px',
+          // padding: '8px',
+          // minHeight: '25px',
+          backgroundColor: '#292739',
+          // width: '20%',
+          // fontWeight: 'bold',
         }}
       >
         {/* {console.log(finances)} */}
-        {finances !== null ? finances : 'Загрузка...'}
+        {finances !== null ? finances+'$' : 'Загрузка...'}
       </div>
     </div>
   );

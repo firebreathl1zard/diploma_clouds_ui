@@ -23,9 +23,8 @@ function AuthorizationPages({ setData }) {
   }, [status, navigate]);
 
   const handleSubmit = async (event) => {
-
     event.preventDefault();
-
+  
     if (!username || !password) {
       setError('Пожалуйста, введите имя пользователя и пароль.');
       setSuccessMessage('');
@@ -43,7 +42,7 @@ function AuthorizationPages({ setData }) {
       });
   
       const data = await response.json();
-
+  
       if (!response.ok) {
         if (data.message) {
           setError(data.message);
@@ -54,13 +53,16 @@ function AuthorizationPages({ setData }) {
         dispatch(unauthorized());
         return;
       }
-
-      // setToken(data.token);
+  
+      const tokenExpirationTime = Date.now() + data.expiresIn + 14 * 60 * 60 * 1000;
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('tokenExpiration', tokenExpirationTime);
+  
       setSuccessMessage('Успешная авторизация!');
       dispatch(loginSuccess());
       setError('');
-      setData(data); 
-      navigate('/workflow'); 
+      setData(data);
+      navigate('/workflow');
     } catch (error) {
       console.error('Ошибка:', error);
       setError('Произошла ошибка при авторизации.');
