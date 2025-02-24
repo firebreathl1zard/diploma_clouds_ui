@@ -10,7 +10,7 @@ import PaymentButton from './Item/PaymentButton';
 import Logs from './Item/Logs';
 import VirtualMachines from './Item/VirtualMachines';
 
-const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemDoubleClick, isChild }) => {
+const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemDoubleClick, isChild, handleDuplicateItem, draggedItemId}) => {
   const [isExpanded, setIsExpanded] = useState(item.expanded);
   const [isDragging, setIsDragging] = useState(false);
   const [offsetX, setOffsetX] = useState(0);
@@ -19,16 +19,21 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
   const [selectedMachine, setSelectedMachine] = useState('');
   const [logs, setLogs] = useState([]);
   const [team, setTeam] = useState('[Enter Team Here]');
-  const [vmStatus, setVmStatus] = useState({ purpose: '', status: '' });
+  const [vmStatuses, setVmStatuses] = useState([]);
   const [hasVmInfo, setHasVmInfo] = useState(false);
+  const [isMouseDown, setIsMouseDown] = useState(false);
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleExpand = () => {
     if (isChild) {
-      setIsExpanded(!isExpanded);  
+      setIsExpanded(prev => !prev);
       handleItemDoubleClick(item.id);
     }
   };
+
+  useEffect(() => {
+    console.log('Rendering Item component with id:', item.id, 'isExpanded:', isExpanded);
+  }, [isExpanded, item.id]);
 
   useEffect(() => {
     const handleMouseMove = (event) => {
@@ -55,10 +60,13 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
         const data = await response.json();
         
         if (data.vminfo && data.vminfo.length > 0) {
-          const { status, vm_purpose } = data.vminfo[0];
-          setVmStatus({ purpose: vm_purpose, status });
+          const statuses = data.vminfo.map(vm => ({
+            purpose: vm.vm_purpose,
+            status: vm.status
+          }));
+          setVmStatuses(statuses);
         } else {
-          setVmStatus({ purpose: '', status: undefined });
+          setVmStatuses([]);
         }
       } catch (error) {
         console.error('Error fetching VM data:', error);
@@ -67,29 +75,44 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
 
     fetchVmData();
 
-    const intervalId = setInterval(fetchVmData, 500);
+    const intervalId = setInterval(fetchVmData, 10000);
     return () => clearInterval(intervalId);
   }, [item.id]);
 
-const getStatusColor = (status) => {
+  const getStatusColor = (status) => {
     if (status === undefined) {
-        return 'grey';
+      return 'grey';
     }
 
     switch (status) {
-        case 'running':
-            return 'green';
-        case 'stopped':
-            return 'red';
-        case 'pending':
-            return 'grey';
-        default:
-            return 'yellow';
+      case 'running':
+        return 'green';
+      case 'stopped':
+        return '#7C7A8C';
+      case 'pending':
+        return 'grey';
+      default:
+        return 'yellow';
     }
-};
-
+  };
 
   const handleMouseDown = (event) => {
+    const isCopy = item.id.endsWith('с');
+    if (!isChild) {
+      const newItem = {
+        ...item,
+        id: `${item.id}с`,
+        
+      };
+
+      if (isCopy) {
+        event.preventDefault();
+        return;
+      }
+      
+      handleDuplicateItem(newItem);
+    }
+  
     setIsDragging(true);
     const { clientX, clientY } = event;
     const rect = event.target.getBoundingClientRect();
@@ -98,9 +121,13 @@ const getStatusColor = (status) => {
     event.preventDefault();
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (event) => {
     setIsDragging(false);
     handleItemDragEnd(item);
+    if (isMouseDown) {
+      handleItemDragEnd(item);
+    }
+    setIsMouseDown(false);
   };
 
   const handlePayment = () => {
@@ -125,13 +152,14 @@ const getStatusColor = (status) => {
         <div
           id={item.id}
           ref={provided.innerRef}
-          {...provided.draggableProps}
-          className={`item ${isDragging ? 'dragging' : ''} ${isExpanded ? 'expanded' : 'collapsed'}`}
+          {...provided.dragHandleProps}
+          className={`item ${isDragging ? 'dragging' : ''} ${isExpanded ? 'expanded' : 'collapsed'} ${item.id.endsWith('с') ? 'copy collapsed' : ''}`}
           style={{
             left: item.x,
             top: item.y,
             position: 'absolute',
-            zIndex: '999',
+            zIndex: isDragging || item.id === draggedItemId ? '1000' : '1',
+            pointerEvents: item.id.endsWith('с') ? 'none' : 'auto', 
           }}
           onMouseUp={handleMouseUp}
         >
@@ -141,30 +169,38 @@ const getStatusColor = (status) => {
             onDoubleClick={handleExpand}
           >
             <div className="item-content-header">
-        <abbr className='item-title' title={item.content}>{item.content}</abbr>
-          {!isExpanded && (
-            <span
-              className="status-indicator"
-              style={{ backgroundColor: getStatusColor(vmStatus.status) }}
-              title={`${vmStatus.purpose}:${vmStatus.status}`}
-              />
-            )}
-          </div>
+              <abbr className='item-title' title={item.content}>{item.content}</abbr>
+              {/* {isExpanded && (
+                <MachineSelection projectId={item.id} />
+              )} */}
+              {!isExpanded && (
+                <div className="status-indicators-container">
+                  {vmStatuses.map((vm, index) => (
+                    <span
+                      key={index}
+                      className="status-indicator"
+                      style={{ backgroundColor: getStatusColor(vm.status) }}
+                      title={`${vm.purpose}:${vm.status}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           {isExpanded && (
             <div className="item-content">
               <div className="item-content-header">
-                <div style={{ minWidth: '80px', marginLeft: '280px', }}>
+                <div style={{ minWidth: '80px', }}>
                   <Team project_id={item.id} />
+                  <Investment investmentAmount={investmentAmount} setInvestmentAmount={setInvestmentAmount} project_id={item.id} />
                 </div>
               </div>
               <div className="item-content-body">
                 <div className="machine-selection-container">
                   <VirtualMachines projectId={item.id} /> 
                 </div>
-                <Investment investmentAmount={investmentAmount} setInvestmentAmount={setInvestmentAmount} project_id={item.id} />
               </div>
-              <Logs logs={logs} />
+              {/* <Logs logs={logs} /> */}
             </div>
           )}
         </div>

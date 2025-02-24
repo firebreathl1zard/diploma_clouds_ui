@@ -1,5 +1,5 @@
 import React from 'react';
-import rebootImage from '../../../images/reload_icon-icons.com_69600.png';
+import rebootImage from '../../../images/vm-restart-btn.png';
 
 const RebootButton = ({ onClick, isLoading,vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;

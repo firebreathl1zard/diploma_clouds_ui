@@ -1,4 +1,5 @@
 .modal-overlay {
+    color: white;
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +12,8 @@
 }
 
 .modal-content {
-    background: white;
+    background: rgb(39, 38, 51);
+    color: white;
     padding: 20px;
     border-radius: 8px;
     width: 90%;
@@ -28,7 +30,7 @@
     background: none;
     border: none;
     font-size: 28px;
-    color: #333;
+    color: white;
     cursor: pointer;
     transition: color 0.3s;
 }

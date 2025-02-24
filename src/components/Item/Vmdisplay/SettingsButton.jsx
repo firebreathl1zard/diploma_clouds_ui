@@ -1,99 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import settingImage from '../../../images/2849830-gear-interface-multimedia-options-setting-settings_107986.png';
+import settingImage from '../../../images/options.png';
 import '../../../styles/SSHkey.css';
+import StopButton from './StopButton';
+import ResetButton from './ResetButton';
+import DestroyButton from './DestroyButton';
+import AttachedSshKeysTab from '../Modal/AttachedSshKeysTab'; 
+import SshKeysTab from '../Modal/SshKeysTab';
+import PackagesTab from '../Modal/PackagesTab'; 
+import PackageDetailModal from '../Modal/PackageDetailModal';
 
-const SettingsButton = ({ vm_id }) => {
+const SettingsButton = ({ vm_id, buttons, cpu, ram, projectId }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [sshKeys, setSshKeys] = useState([]); 
-    const [selectedKeyId, setSelectedKeyId] = useState(null);
-    const [confirmationVisible, setConfirmationVisible] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const [activeTab, setActiveTab] = useState('sshKeys');
+    const [activeTab, setActiveTab] = useState('general');
+    const [activeModal, setActiveModal] = useState(null);
+    const [selectedPackage, setSelectedPackage] = useState(false);
     const apiUrl = process.env.REACT_APP_API_URL; 
 
     const toggleModal = () => {
         setIsOpen(!isOpen);
-        if (!isOpen) {
-            fetchSshKeys();
-            resetState();
-        }
-    };
-
-    const resetState = () => {
-        setSshKeys([]);
-        setSelectedKeyId(null);
-        setConfirmationVisible(false);
-        setSuccess(false);
-    };
-
-    const fetchSshKeys = async () => {
-        try {
-            const response = await fetch(`${apiUrl}/v1/sshkeys`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
-            
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-    
-            const data = await response.json();
-            
-            const sshKeys = data.user_ssh_keys.map(key => ({
-                id: key.id,
-                title: key.title,
-                ssh_key: key.ssh_key
-            }));
-    
-            setSshKeys(sshKeys);
-            console.log('SSH Keys:', sshKeys);
-            
-        } catch (error) {
-            console.error('Error fetching SSH keys:', error);
-        }
-    };
-
-    const handleKeySelect = (keyId) => {
-        setSelectedKeyId(keyId);
-        setConfirmationVisible(true);
-    };
-
-    const handleConfirm = async () => {
-        if (selectedKeyId) {
-            try {
-                const response = await fetch(`${apiUrl}/v1/sshkey/apply`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        vm_id: String(vm_id),
-                        ssh_key_id: String(selectedKeyId),
-                    }),
-                });
-    
-                if (response.ok) {
-                    setSuccess(true);
-                    setSelectedKeyId(null);
-                    console.log('123')
-                    setConfirmationVisible(false);
-                } else {
-                    const errorData = await response.json();
-                    console.error('Error applying SSH key:', response.statusText, errorData);
-                }
-            } catch (error) {
-                console.error('Error applying SSH key:', error);
-            }
-        }
+        setActiveModal(null);
+        setSelectedPackage(false);
     };
 
     const handleKeyDown = (event) => {
         if (event.key === 'Escape') {
-            setIsOpen(false);
+            if (activeModal) {
+                setActiveModal(null);
+                setSelectedPackage(false);
+            } else {
+                setIsOpen(false);
+            }
         }
     };
 
@@ -102,37 +38,53 @@ const SettingsButton = ({ vm_id }) => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, []);
+    }, [activeModal]);
 
-    const renderSshKeysTab = () => (
+    const renderGeneralTab = () => (
         <>
-            <h3>SSH Keys</h3>
-            <ul>
-                {Array.isArray(sshKeys) && sshKeys.map(key => (
-                    <li 
-                        key={key.id} 
-                        onClick={() => handleKeySelect(key.id)} 
-                        className={selectedKeyId === key.id ? 'selected-key' : ''}
-                    >
-                        {key.title} {success && selectedKeyId === key.id && '✔️'}
-                    </li>
-                ))}
-            </ul>
-
-            {confirmationVisible && (
-                <div className="confirmation">
-                    <p>Вы уверены, что хотите применить этот SSH ключ?</p>
-                    <button onClick={handleConfirm}>Да</button>
-                </div>
-            )}
+            <h3>General</h3>
+            <div className="general-info">
+                <p>CPU: {cpu}</p>
+                <p>RAM: {ram}</p>
+            </div>
+            <div className="general-buttons">
+                <StopButton 
+                    onClick={buttons.stop.onClick} 
+                    isLoading={false}
+                    vm_id={vm_id} 
+                    disabled={buttons.stop.disabled} 
+                />
+                <ResetButton 
+                    onClick={buttons.reset.onClick} 
+                    isLoading={false}
+                    vm_id={vm_id} 
+                    disabled={buttons.reset.disabled} 
+                />
+                <DestroyButton 
+                    onClick={buttons.destroy.onClick} 
+                    isLoading={false}
+                    vm_id={vm_id} 
+                    disabled={buttons.destroy.disabled} 
+                />
+            </div>
         </>
     );
 
-    const renderLanguagesTab = () => (
-        <>
-            <h3>Языки</h3>
-        </>
-    );
+    const handleOpenSshKeysTab = () => {
+        setActiveModal('sshKeys'); 
+    };
+
+    const handleCloseSshKeysTab = () => {
+        setActiveModal(null);
+    };
+    const handleSshKeyApplied = () => {
+        handleCloseSshKeysTab();
+    };
+
+    const handlePackageSelect = (pkg) => {
+        setSelectedPackage(pkg);
+        setActiveModal('packageDetail');
+    };
 
     return (
         <div>
@@ -146,12 +98,40 @@ const SettingsButton = ({ vm_id }) => {
                         <span className="close-button" onClick={toggleModal}>&times;</span>
                         <h2>Настройки</h2>
 
-                        <div className="tabs">
-                            <button onClick={() => setActiveTab('sshKeys')} className={activeTab === 'sshKeys' ? 'active' : ''}>SSH Ключи</button>
-                            <button onClick={() => setActiveTab('languages')} className={activeTab === 'languages' ? 'active' : ''}>Языки</button>
-                        </div>
+                        {activeModal === 'packageDetail' && selectedPackage ? (
+                            <PackageDetailModal 
+                                packageData={selectedPackage} 
+                                onClose={() => {
+                                    setSelectedPackage(false);
+                                    setActiveModal(null);
+                                }} 
+                            />
+                        ) : activeModal === 'sshKeys' ? (
+                            <div className="modal">
+                                <div className="modal-content">
+                                    <span className="close-button" onClick={handleCloseSshKeysTab}>&times;</span>
+                                    <SshKeysTab vm_id={vm_id} onSshKeyApplied={handleSshKeyApplied}/>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="tabs">
+                                    <button onClick={() => setActiveTab('general')} className={activeTab === 'general' ? 'active' : ''}>General</button>
+                                    <button onClick={() => setActiveTab('attachedSshKeys')} className={activeTab === 'attachedSshKeys' ? 'active' : ''}>Привязанные SSH</button>
+                                    <button onClick={() => setActiveTab('languages')} className={activeTab === 'languages' ? 'active' : ''}>Пакеты</button>
+                                </div>
 
-                        {activeTab === 'sshKeys' ? renderSshKeysTab() : renderLanguagesTab()}
+                                {activeTab === 'attachedSshKeys' ? 
+                                    <AttachedSshKeysTab 
+                                        vm_id={vm_id} 
+                                        projectId={projectId}
+                                        onAddKey={handleOpenSshKeysTab} 
+                                    /> : 
+                                    activeTab === 'languages' ? 
+                                        <PackagesTab onPackageSelect={handlePackageSelect} /> : 
+                                        renderGeneralTab()}
+                            </>
+                        )}
                     </div>
                 </div>
             )}

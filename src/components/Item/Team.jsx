@@ -34,24 +34,30 @@ const Team = ({ project_id }) => {
   return (
     <div
       style={{
-        
-        border: '1px solid #ccc',
-        borderRadius: '4px',
-        padding: '8px',
-        minHeight: '30px',
-        backgroundColor: '#fff',
-        width: '100%',
-        wordWrap: 'break-word',
+        display: 'flex',
+        flexDirection: 'row',
+        gap: '3px',
+        backgroundColor: '#292739',
+        fontSize: '11px'
       }}
     >
       {error ? ( 
         <p>{error}</p>
       ) : team.length > 0 ? (
-        team.map(user => (
-          <div key={user.user_id}>
-            <span><p><abbr className='team' title={user.f_name}>{`${user.f_name} `}</abbr></p></span>
-          </div>
-        ))
+        <>
+          <span>Команда: </span>
+          {team.map((user, index) => (
+            <div key={user.user_id}>
+              <span>
+                <p>
+                  <abbr className='team' title={user.login}>
+                    {`${user.f_name} ${user.l_name}${index < team.length - 1 ? ', ' : ''}`}
+                  </abbr>
+                </p>
+              </span>
+            </div>
+          ))}
+        </>
       ) : (
         <p>Команда не найдена</p>
       )}

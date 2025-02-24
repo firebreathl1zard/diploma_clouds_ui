@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import startImage from '../../../images/play-button_icon-icons.com_53922.png';
+import startImage from '../../../images/vm-trigger-btn.png';
 
 const StartButton = ({onClick, isLoading, vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;
