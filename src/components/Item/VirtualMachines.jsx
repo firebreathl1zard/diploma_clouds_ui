@@ -92,12 +92,12 @@ const VirtualMachines = ({ projectId }) => {
                 </div>
               ))}
               <div className="action-buttons">
-                <StartButton vm_id={vm.vm_id} project_id={projectId} title="Запустить" onClick={handleButtonClick} />
-                <ShutdownButton vm_id={vm.vm_id} project_id={projectId} title="Выключить" onClick={handleButtonClick} />
-                <StopButton vm_id={vm.vm_id} project_id={projectId} title="Остановить" onClick={handleButtonClick} />
-                <RebootButton vm_id={vm.vm_id} project_id={projectId} title="Перезагрузить" onClick={handleButtonClick} />
-                <ResetButton vm_id={vm.vm_id} project_id={projectId} title="Сбросить" onClick={handleButtonClick} />
-                <DestroyButton vm_id={vm.vm_id} project_id={projectId} title="Уничтожить" onClick={handleButtonClick} />
+                <StartButton vm_id={vm.vm_id} project_id={projectId} title="start" onClick={handleButtonClick} />
+                <ShutdownButton vm_id={vm.vm_id} project_id={projectId} title="shutdown" onClick={handleButtonClick} />
+                <StopButton vm_id={vm.vm_id} project_id={projectId} title="stop" onClick={handleButtonClick} />
+                <RebootButton vm_id={vm.vm_id} project_id={projectId} title="reboot" onClick={handleButtonClick} />
+                <ResetButton vm_id={vm.vm_id} project_id={projectId} title="reset" onClick={handleButtonClick} />
+                <DestroyButton vm_id={vm.vm_id} project_id={projectId} title="destroy" onClick={handleButtonClick} />
               </div>
               <Metrics vm_id={vm.vm_id}/>
             </div>

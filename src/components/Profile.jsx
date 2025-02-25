@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; 
 import SSHkey from './SSHkey';
-import profileImage from '../images/ui_user_profile_avatar_person_icon_208734.png'
+import profileImage from '../images/ui_user_profile_avatar_person_icon_208734.png';
 
 const Profile = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [isOpen, setIsOpen] = useState(false);
+  const [userData, setUserData] = useState({ login: '', role: '' }); // Corrected here
 
   const toggleProfile = () => {
     setIsOpen(!isOpen);
@@ -25,13 +26,34 @@ const Profile = () => {
         throw new Error('Network response was not ok');
       }
 
-      console.log("User logged out");
-      // localStorage.removeItem('token');
+      console.log("User  logged out");
       window.location.href = '/';
     } catch (error) {
       console.error('Error during logout:', error);
     }
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => { // Corrected function name
+      try {
+        const response = await fetch(`${apiUrl}/v1/user/login`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        setUserData({ login: data.userlogin, role: data.userRole }); // Corrected here
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData(); // Corrected function call
+  }, [apiUrl]);
 
   return (
     <div style={{ position: 'relative' }}>
@@ -54,10 +76,16 @@ const Profile = () => {
           flexDirection: 'column', 
           alignItems: 'flex-start' 
         }}>
+          <div style={{ marginBottom: '10px' }}>
+            <strong>Login:</strong> {userData.login}
+          </div>
+          <div style={{ marginBottom: '10px' }}>
+            <strong>Role:</strong> {userData.role}
+          </div>
           <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <button style={{ marginBottom: '10px' }}>Projects</button>
           </Link>
-          <SSHkey/>
+          <SSHkey />
           <button onClick={handleLogout} style={{ marginTop: '10px' }}>
             Выйти
           </button>
