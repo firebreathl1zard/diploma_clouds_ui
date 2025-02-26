@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { modalStyles } from './Modal.styles';
 
+
 const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) => {
   const [selectedVM, setSelectedVMState] = useState(null);
   const [purpose, setPurpose] = useState('');
@@ -22,15 +23,29 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
     <div style={modalStyles.overlay}>
       <div style={modalStyles.modal}>
         <div style={modalStyles.header}>
-          <h2 style={modalStyles.title}>Выбор конфигурации ВМ</h2>
-          <button style={modalStyles.closeButton} onClick={onClose}>✖</button>
+          <h3 style={modalStyles.title}>Выбор конфигурации ВМ</h3>
+          <button 
+              style={{ 
+                  ...modalStyles.closeButton, 
+                  transition: 'color 0.3s' 
+              }} 
+              onClick={onClose}
+              onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#4937D8'; 
+              }} 
+              onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'white'; 
+              }}
+          >
+              &times;
+          </button>
         </div>
-        <h3 style={modalStyles.subtitle}>Vm конфигурации:</h3>
+        <h3 style={modalStyles.subtitle}>Конфигурации ВМ:</h3>
         <div style={modalStyles.vmList}>
           {vmConfigurations.length > 0 ? (
             vmConfigurations.map((vm) => (
               <div key={vm.id} style={modalStyles.vmItem}>
-                <label style={{ ...modalStyles.vmName, backgroundColor: selectedVM === vm ? '#e0f7fa' : 'transparent' }}>
+                <label style={{ ...modalStyles.vmName, backgroundColor: selectedVM === vm ? 'none' : 'transparent' }}>
                   <input
                     type="radio"
                     name="vmConfiguration"
@@ -39,7 +54,7 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
                       setSelectedVMState(vm);
                       setSelectedVM(vm);
                     }}
-                    style={{ marginRight: '10px' }}
+                    style={{ marginRight: '10px' ,color: '#4937D8' }}
                   />
                   {vm.id}. {vm.name}
                 </label>
@@ -65,8 +80,8 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
         </div>
 
         <h3 style={modalStyles.subtitle}>Выберите назначение:</h3>
-        <div>
-          <label>
+        <div style={{marginLeft: '15px'}}>
+          <label style={{color:'#ffffff'}}>
             <input
               type="radio"
               name="purpose"
@@ -77,7 +92,7 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
             />
             Frontend
           </label>
-          <label>
+          <label style={{color:'#ffffff',}}>
             <input
               type="radio"
               name="purpose"
@@ -88,7 +103,7 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
             />
             Backend
           </label>
-          <label>
+          <label style={{color:'#ffffff'}}>
             <input
               type="radio"
               name="purpose"
@@ -102,9 +117,21 @@ const Modal = ({ isOpen, onClose, onConfirm, vmConfigurations, setSelectedVM }) 
         </div>
 
         <div style={modalStyles.buttonContainer}>
-          <button onClick={handleConfirm} style={modalStyles.okButton}>
-            ОК
-          </button>
+        <button 
+            onClick={handleConfirm} 
+            style={{ 
+                ...modalStyles.okButton, 
+                transition: 'color 0.3s' 
+            }} 
+            onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#4937D8'; 
+            }} 
+            onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'white'; 
+            }}
+        >
+            Отправить
+        </button>
         </div>
       </div>
     </div>

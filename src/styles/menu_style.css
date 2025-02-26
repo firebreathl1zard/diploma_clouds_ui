@@ -56,3 +56,27 @@
   .content {
     padding: 20px;
   } */
+
+
+
+  
+::-webkit-scrollbar {
+  width: 12px; /* Ширина вертикальной полосы прокрутки */
+}
+
+
+::-webkit-scrollbar-thumb {
+  background-color: #14131C; /* Цвет ползунка */
+  border-radius: 10px; /* Закругление углов */
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #292739; /* Цвет ползунка при наведении */
+}
+
+
+::-webkit-scrollbar-track {
+  background: #292739; /* Цвет области полосы прокрутки */
+  border-radius: 10px; /* Закругление углов */
+}

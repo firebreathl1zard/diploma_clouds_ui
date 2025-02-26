@@ -14,13 +14,14 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f4f4f4;
+    background-color: #14131C;
+    color: #fff;
   }
   
   .auth-form {
-    background-color: #fff;
+    background-color: #292739;
     padding: 30px;
-    border-radius: 5px;
+    border-radius: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     width: 350px;
   }
@@ -28,18 +29,20 @@
   h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #333;
+    color: #fff;
   }
   
   .form-group {
     margin-bottom: 15px;
+    color: #fff;
+
   }
   
   label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #333;
+    color: #fff;
   }
   
   input[type="text"],
@@ -47,23 +50,25 @@
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 3px;
+    border-radius: 10px;
     box-sizing: border-box;
+    color: #fff;
   }
   
   button[type="submit"] {
-    background-color: #007bff;
-    color: #fff;
+    background-color: #534F73;
+    color: #ffffff;
     padding: 10px 20px;
     border: none;
-    border-radius: 3px;
+    border-radius: 10px;
     cursor: pointer;
     width: 100%;
     font-size: 16px;
   }
   
   button[type="submit"]:hover {
-    background-color: #0069d9;
+    background-color: #C0C9FF;
+    color: #4937D8;
   }
   
   .error {
@@ -76,6 +81,16 @@
     color: green;
     margin-top: 10px;
     text-align: center;
+  }
+
+  .buttonreg{
+    background-color: #534F73;
+    color:#ffffff;
+  }
+
+  .buttonreg:hover{
+    background-color: #C0C9FF;
+    color: #4937D8;
   }
 
 

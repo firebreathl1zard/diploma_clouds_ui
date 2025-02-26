@@ -83,6 +83,7 @@ function AuthorizationPages({ setData }) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Имя пользователя"
+              style={{backgroundColor: "#534F73"}}
             />
           </div>
           <div className="form-group">
@@ -93,9 +94,10 @@ function AuthorizationPages({ setData }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Пароль"
+              style={{backgroundColor: "#534F73"}}
             />
           </div>
-          <button type="submit">Войти</button>
+          <button className='buttonreg' type="submit">Войти</button>
           {error && <p className="error">{error}</p>} 
           {successMessage && <p className="success">{successMessage}</p>} 
         </form>

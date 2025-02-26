@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/modalssh.css';
 import InfoModal from './InfoModal';
+import deletesImage from '../../images/editdelete_104494.png';
 
 const Modalssh = ({ isOpen, onClose, sshKeys, onAddKey }) => {
     const [isInfoOpen, setIsInfoOpen] = useState(false);
@@ -134,13 +135,28 @@ const Modalssh = ({ isOpen, onClose, sshKeys, onAddKey }) => {
                         </thead>
                         <tbody>
                             {sshKeys.map((key, index) => (
-                                <tr key={index}>
-                                    <td className="ssh-key-title">{key.title}</td>
-                                    <td className="ssh-key-value"><pre>{formatSshKey(key.ssh_key)}</pre></td>
-                                    <td>
-                                        <button onClick={() => handleDeleteKey(key.id)}>Удалить</button>
-                                    </td>
-                                </tr>
+                            <tr key={index}>
+                                <td className="ssh-key-title">{key.title}</td>
+                                <td className="ssh-key-value"><pre>{formatSshKey(key.ssh_key)}</pre></td>
+                                <td style={{alignItems: 'center'}}>
+                                <button 
+                                    style={{ backgroundColor: 'transparent', border: 'none' }} 
+                                    onClick={() => handleDeleteKey(key.id)}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.querySelector('img').style.filter = 'invert(36%) sepia(100%) saturate(0%) hue-rotate(210deg) brightness(100%) contrast(100%)';
+                                    }} 
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.querySelector('img').style.filter = 'none'; 
+                                    }}
+                                >
+                                    <img 
+                                        style={{ width: '25px', height: '25px', transition: 'filter 0.3s' }} 
+                                        src={deletesImage} 
+                                        alt="deletessh" 
+                                    />
+                                </button>
+                                </td>
+                            </tr>
                             ))}
                             {isAddingKey ? (
                                 <tr>
@@ -163,15 +179,67 @@ const Modalssh = ({ isOpen, onClose, sshKeys, onAddKey }) => {
                                     </td>
                                     <td>
                                         <div className="button-group">
-                                            <button onClick={handleAddKey}>Подтвердить</button>
-                                            <button onClick={handleCancelAddKey}>Отмена</button>
+                                        <button 
+                                            className="toggle-inputs-btn" 
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                                borderRadius: '14px',
+                                                color: '#ffffff',
+                                                transition: 'background-color 0.3s, color 0.3s' 
+                                            }} 
+                                            onClick={handleAddKey}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.color = '#4937D8'; 
+                                            }} 
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.color = '#ffffff'; 
+                                            }}
+                                        >
+                                            Подтвердить
+                                        </button>
+
+                                        <button 
+                                            className="toggle-inputs-btn" 
+                                            style={{
+                                                backgroundColor: 'transparent',
+                                                borderRadius: '14px',
+                                                color: '#ffffff',
+                                                transition: 'background-color 0.3s, color 0.3s' 
+                                            }} 
+                                            onClick={handleCancelAddKey}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.color = '#4937D8'; 
+                                            }} 
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.color = '#ffffff'; 
+                                            }}
+                                        >
+                                            Отмена
+                                        </button>
                                         </div>
                                     </td>
                                 </tr>
                             ) : (
                                 <tr>
                                     <td colSpan="3">
-                                        <button onClick={() => setIsAddingKey(true)}>Добавить ключ</button>
+                                    <button 
+                                        style={{
+                                            backgroundColor: 'transparent',
+                                            color: '#ffffff',
+                                            border: 'none',
+                                            borderRadius: '14px',
+                                            transition: 'color 0.3s' 
+                                        }} 
+                                        onClick={() => setIsAddingKey(true)}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.color = '#4937D8'; 
+                                        }} 
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.color = '#ffffff'; 
+                                        }}
+                                    >
+                                        Добавить ключ
+                                    </button>
                                     </td>
                                 </tr>
                             )}

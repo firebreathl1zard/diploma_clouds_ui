@@ -14,48 +14,59 @@ export const modalStyles = {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: '10px',
+    
     },
     modal: {
-      background: 'rgb(39, 38, 51)',
-      padding: '20px',
-      borderRadius: '5px',
-      width: '400px',
-      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-    },
+      background: 'rgb(39, 38, 51)', 
+      padding: '5px',
+      borderRadius: '20px',
+      width: '420px',
+      height: 'auto',
+      border: '1px solid #7C7A8C' 
+  },
     title: {
-      margin : '0 0 10px',
-      fontSize: '24px',
-      fontWeight: 'bold',
-      color: '#fff',
+      marginTop:'15px',
+      marginLeft: '15px',
+      fontSize: '16px',
+      fontWeight: '700',
+      color: '#ffffff',
+      height:'20px'
     },
     subtitle: {
-      color: '#fff',
+      color: '#ffffff',
       margin: '0 0 15px',
-      fontSize: '18px',
+      fontSize: '16px',
       fontWeight: '600',
+      marginTop:'30px',
+      marginLeft: '15px',
+      height:'20px'
     },
     vmList: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
-      gap: '10px',
+      gap: '20px',
       maxHeight: '200px',
       overflowY: 'auto',
       marginBottom: '20px',
+      marginTop:'10px',
     },
     vmItem: {
       display: 'flex',
       alignItems: 'center',
+      gap: '40px',
     },
     vmName: {
       cursor: 'pointer',
       padding: '10px',
       borderRadius: '4px',
       transition: 'background-color 0.3s',
+      fontSize: '14px',
+      color: '#ffffff'
     },
     vmDetails: {
-      marginTop: '20px',
+      marginTop: '10px',
       border: '1px solid #ccc',
+      borderRadius: '10px ',
       padding: '10px',
     },
     input: {
@@ -71,11 +82,12 @@ export const modalStyles = {
     },
     okButton: {
       padding: '10px 15px',
-      backgroundColor: '#007bff',
-      color: 'white',
       border: 'none',
       borderRadius: '4px',
       cursor: 'pointer',
+      background: 'transparent',
+      color:'#ffffff',
+      fontSize: '14px',
     },
     tooltipContainer: {
       position: 'relative',
@@ -106,13 +118,18 @@ export const modalStyles = {
       transition: 'opacity 0.3s',
     },
     closeButton: {
-      color: '#fff',
+      color: '#ffffff',
       position: 'flex',
       top: '10px',
       left: '10px',
       cursor: 'pointer',
       border: 'none',
       background: 'none',
-      fontSize: '20px',
+      fontSize: '30px',
+      transition: "color 0.3s",
     },
+    closeButtonHover: {
+        color: 'blue', 
+    }
+    
   };

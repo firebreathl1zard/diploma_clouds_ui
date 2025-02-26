@@ -92,8 +92,8 @@ const SshKeysTab = ({ vm_id, onSshKeyApplied }) => {
 
             {confirmationVisible && (
                 <div className="confirmation">
-                    <p>Вы уверены, что хотите применить этот SSH ключ?</p>
-                    <button onClick={handleConfirm}>Да</button>
+                    <p style={{color:'#ffffff'}}>Вы уверены, что хотите применить этот SSH ключ?</p>
+                    <button style={{backgroundColor:'transparent',color:'#ffffff'}} onClick={handleConfirm}>Да</button>
                 </div>
             )}
         </>
