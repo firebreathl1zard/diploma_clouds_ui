@@ -127,7 +127,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
             height: '700px', 
             minWidth: '250px', 
             // border: '1px solid black',
-            overflow: 'scroll',
+            // overflow: 'scroll',
             
           }}
         >
