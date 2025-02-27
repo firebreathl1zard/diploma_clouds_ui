@@ -81,10 +81,13 @@ li {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    background-color: #534F73;
+    color: #ffffff;
 }
 
 li:hover {
-    background-color: #f0f0f0;
+    background-color: #C0C9FF;
+    color: #4937D8;
 }
 
 .selected-key {

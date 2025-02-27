@@ -143,7 +143,7 @@ const Modalssh = ({ isOpen, onClose, sshKeys, onAddKey }) => {
                                     style={{ backgroundColor: 'transparent', border: 'none' }} 
                                     onClick={() => handleDeleteKey(key.id)}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.querySelector('img').style.filter = 'invert(36%) sepia(100%) saturate(0%) hue-rotate(210deg) brightness(100%) contrast(100%)';
+                                        e.currentTarget.querySelector('img').style.filter = 'invert(34%) sepia(100%) saturate(1000%) hue-rotate(0deg) brightness(100%) contrast(100%)';
                                     }} 
                                     onMouseLeave={(e) => {
                                         e.currentTarget.querySelector('img').style.filter = 'none'; 
