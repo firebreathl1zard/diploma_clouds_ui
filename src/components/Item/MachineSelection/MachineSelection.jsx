@@ -54,7 +54,20 @@ const MachineSelection = ({ project_id, onPurposeSelect }) => {
   return (
     <div>
       <div style={modalStyles.addButtonContainer} onClick={() => setIsModalOpen(true)}>
-        <button style={modalStyles.addButton}>+</button>
+      <button 
+          style={{ 
+              ...modalStyles.addButton, 
+              transition: 'color 0.3s' 
+          }} 
+          onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#4937D8'; 
+          }} 
+          onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'white'; 
+          }}
+      >
+          +
+      </button>
       </div>
 
       <Modal

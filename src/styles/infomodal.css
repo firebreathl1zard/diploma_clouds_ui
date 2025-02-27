@@ -34,16 +34,19 @@
     margin-right: 5px;
     border-radius: 4px;
     transition: background-color 0.3s;
+    color: #ffffff;
 }
 
 .tabs button:hover {
-    background-color: #f0f0f0;
+    color: #4937D8;
+    background-color: #C0C9FF;
+    
 }
 
 .tabs button.active {
-    background-color: #007bff;
+    background-color: #534F73;
     color: white;
-    border-color: #007bff;
+    border-color: #534F73;
 }
 
 .tab-content {

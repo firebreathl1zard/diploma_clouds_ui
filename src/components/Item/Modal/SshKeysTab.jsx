@@ -92,8 +92,23 @@ const SshKeysTab = ({ vm_id, onSshKeyApplied }) => {
 
             {confirmationVisible && (
                 <div className="confirmation">
-                    <p>Вы уверены, что хотите применить этот SSH ключ?</p>
-                    <button onClick={handleConfirm}>Да</button>
+                    <p style={{color:'#ffffff'}}>Вы уверены, что хотите применить этот SSH ключ?</p>
+                    <button 
+                        style={{ 
+                            backgroundColor: 'transparent', 
+                            color: '#ffffff', 
+                            transition: 'background-color 0.3s, color 0.3s' 
+                        }} 
+                        onClick={handleConfirm}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.color = '#4937D8'; 
+                        }} 
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.color = '#ffffff'; 
+                        }}
+                    >
+                        Да
+                    </button>
                 </div>
             )}
         </>

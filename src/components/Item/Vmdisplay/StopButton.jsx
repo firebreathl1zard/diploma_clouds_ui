@@ -1,5 +1,5 @@
 import React from 'react';
-import stopImage from '../../../images/iconfinder-pause-stop-button-player-music-4593160_122283.png';
+import stopImage from '../../../images/attentionexclamationtriangularsignal_104969.png';
 
 const StopButton = ({ onClick, isLoading, vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;
