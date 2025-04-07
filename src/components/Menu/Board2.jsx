@@ -3,6 +3,7 @@ import { Droppable } from 'react-beautiful-dnd';
 import Item from '../Item';
 import SearchBar from '../SearchBar/SearchBar';
 
+
 const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, maxY, lastActiveItem, setLastActiveItem, boardOccupiedSpace, boardRef, handleDuplicateItem, onItemDragEnd, draggedItemId, setDraggedItemId }) => {
   const [offsetY, setOffsetY] = useState(0);
   const itemWidth = 100;
@@ -149,7 +150,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
   return (
     <Droppable droppableId="board2">
       {(provided) => (
-        <div
+        <div className='scrolldigns'
           ref={boardRef}
           {...provided.droppableProps}
           style={{
@@ -159,13 +160,13 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
             minWidth: '250px', 
             // overflow: 'scroll',
             // position: 'relative',
+            
           }}
         >
           <SearchBar items={items} scrollToItem={scrollToItem} />
           {items.map((item, index) => {
             const isChild = isItemInsideBoard(item.x, item.y);
             return (
-              // <div ref={itemRefs.current[item.id]} key={item.id}>
                 <Item
                   item={item}
                   index={index}
@@ -177,7 +178,6 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
                   handleDuplicateItem={handleDuplicateItem}
                   draggedItemId={draggedItemId}
                 />
-              // </div>
             );
           })}
           {provided.placeholder}

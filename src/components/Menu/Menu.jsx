@@ -87,6 +87,8 @@ const Menu = () => {
   };
 
   return (
+    <>
+    
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div style={{margin:'auto'}}>
       <h1 style={{
@@ -116,7 +118,7 @@ const Menu = () => {
         setDraggedItemId={setDraggedItemId}
       />
       </div>
-       <Board 
+       <Board
         items={itemes} 
         setItems={setItemes} 
         isDragging={isDragging}
@@ -126,6 +128,8 @@ const Menu = () => {
         draggedItemId={draggedItemId}
       />
     </DragDropContext>
+    
+    </>
   );
 };
 
