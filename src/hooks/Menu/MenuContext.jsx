@@ -1,17 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setItems } from '../../components/itemsSlice'; 
 
 const MenuContext = createContext();
 
 export const MenuProvider = ({ children }) => {
   const apiUrl = process.env.REACT_APP_API_URL;
+  const dispatch = useDispatch();
   const [itemes, setItemes] = useState([]);
 
   const fetchItems = async () => {
     try {
-      const response = await fetch(`${apiUrl}/v1/projects`,{
+      const response = await fetch(`${apiUrl}/v1/projects`, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         credentials: 'include',
       });
@@ -25,25 +28,27 @@ export const MenuProvider = ({ children }) => {
         isDragging: false,
         expanded: false,
         parentId: null,
+        className: 'collapsed',
       }));
 
       setItemes(formattedItems);
+      dispatch(setItems(formattedItems));
     } catch (error) {
       console.error('Ошибка при получении данных:', error);
     }
   };
 
   useEffect(() => {
-
     fetchItems();
   }, []); 
+
   return (
     <MenuContext.Provider value={itemes}>
       {children}
     </MenuContext.Provider>
   );
 };
-// useSelector(state => state.menuItems.items)
+
 export const useMenuItems = () => {
   return useContext(MenuContext);
 };

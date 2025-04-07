@@ -38,23 +38,21 @@ const Metrics = ({ vm_id, status }) => {
     }
   }, [apiUrl, status, vm_id]);
 
-  const renderMetricBar = (label, value, maxValue) => {
+  const renderMetricBar = (label, value, maxValue, isCpu = false) => {
     const percentage = (value / maxValue) * 100;
 
     return (
-      <div style={{ marginBottom: '4px' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: '4px' }}>{label}:</span>
-          <div style={{ flex: 1, height: '14px', backgroundColor: '#e0e0e0', borderRadius: '4px', overflow: 'hidden', marginRight: '4px' }}>
-            <div style={{
-              height: '100%',
-              width: `${percentage}%`,
-              backgroundColor: percentage > 80 ? 'red' : 'green',
-              transition: 'width 0.5s ease-in-out'
-            }} />
-          </div>
-          <span>{Math.round(percentage)}%</span>
+      <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
+        <span style={{ marginRight: '4px' }}>{label}:</span>
+        <div style={{ height: '12px', backgroundColor: 'rgba(62, 59, 86, 1)', borderRadius: '4px', overflow: 'hidden', marginLeft: isCpu ? '6px' : '0', width: '70px' }}>
+          <div style={{
+            height: '100%',
+            width: `${percentage}%`,
+            backgroundColor: percentage > 80 ? 'red' : 'rgba(37, 194, 48, 1)',
+            transition: 'width 0.5s ease-in-out'
+          }} />
         </div>
+        <span style={{ marginLeft: '4px' }}>{Math.round(percentage)}%</span>
       </div>
     );
   };
@@ -62,7 +60,7 @@ const Metrics = ({ vm_id, status }) => {
   return (
     <div
       style={{
-        marginTop: '12px',
+        marginTop: '0px',
         minHeight: '30px',
         backgroundColor: '#534F73',
         width: '100%',
@@ -71,7 +69,7 @@ const Metrics = ({ vm_id, status }) => {
     >
       {metrics.map((metric) => (
         <div key={metric.vmid}>
-          {renderMetricBar('CPU', metric.cpu * 100, 100)} 
+          {renderMetricBar('CPU', metric.cpu * 100, 100, true)} 
           {renderMetricBar('RAM', metric.mem, metric.maxmem)}
         </div>
       ))}

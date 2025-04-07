@@ -13,7 +13,7 @@ const PaymentButton = ({ handlePayment }) => (
       cursor: 'pointer',
     }}
   >
-    Оплатить
+    Донат
   </button>
 );
 

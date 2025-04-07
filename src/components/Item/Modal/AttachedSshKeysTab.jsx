@@ -54,7 +54,7 @@ const AttachedSshKeysTab = ({ vm_id, projectId, onAddKey }) => {
                         {key.title}
                     </li>
                 ))}
-                <li onClick={onAddKey} style={{ cursor: 'pointer', color: 'black', fontSize: '20px', textAlign: 'center' }}>
+                <li onClick={onAddKey} style={{ cursor: 'pointer', color: 'black', fontSize: '20px', textAlign: 'center' ,color:'#ffffff'}}>
                     +
                 </li>
             </ul>

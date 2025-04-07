@@ -1,0 +1,25 @@
+.search-container {
+    display: flex;
+    align-items: center;
+    border-radius: 14px;
+    background-color: rgba(255, 255, 255, 1);
+    width: 400px;
+    height: 40px;
+    position: absolute;
+    left: 300px;
+    top: 10px
+  }
+  
+  .search-icon {
+    width: 24px;
+    height: 24px;
+    margin-left: 10px;
+  }
+  
+  .search-bar {
+    border-radius: 14px;
+    width: 400px;
+    height: 40px;
+    border: none; 
+    outline: none;
+  }

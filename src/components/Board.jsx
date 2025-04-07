@@ -99,7 +99,7 @@ const Board = ({ items, setItems, isDragging, boardOccupiedSpace, setBoardOccupi
             minHeight: '700px',
             width: '100%',
             // border: '1px solid black',
-            // zIndex: '-1',
+            // zIndex: '999',
             position: 'relative',
             backgroundColor: '#14131C',
             borderRadius: '50px',

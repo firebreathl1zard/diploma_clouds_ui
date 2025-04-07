@@ -27,7 +27,7 @@ const Investment = ({ investmentAmount, project_id }) => {
 
   return (
     <div style={{display: 'flex', flexDirection: 'row', fontSize: '11px'}}>
-      <div style={{}}>Финансы:</div>
+      <div style={{fontSize: '15px',}}>Финансы:</div>
       <div
         style={{
           // border: '1px solid #ccc',
@@ -35,6 +35,7 @@ const Investment = ({ investmentAmount, project_id }) => {
           // padding: '8px',
           // minHeight: '25px',
           backgroundColor: '#292739',
+          fontSize: '15px',
           // width: '20%',
           // fontWeight: 'bold',
         }}

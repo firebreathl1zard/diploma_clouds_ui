@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import '../styles/Item.css'; 
 
-import Title from './Item/Title';
 import Team from './Item/Team';
-import Investment from './Item/Investment';
-import MachineSelection from './Item/MachineSelection/MachineSelection';
-import PaymentButton from './Item/PaymentButton';
 import Logs from './Item/Logs';
 import VirtualMachines from './Item/VirtualMachines';
 
@@ -26,13 +22,14 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
 
   const handleExpand = () => {
     if (isChild) {
+      // console.log(321)
       setIsExpanded(prev => !prev);
       handleItemDoubleClick(item.id);
     }
   };
 
   useEffect(() => {
-    console.log('Rendering Item component with id:', item.id, 'isExpanded:', isExpanded);
+    // console.log('Rendering Item component with id:', item.id, 'isExpanded:', isExpanded);
   }, [isExpanded, item.id]);
 
   useEffect(() => {
@@ -48,36 +45,38 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
   }, [isDragging, item, handleItemDragStart, offsetX, offsetY]);
 
   useEffect(() => {
-    const fetchVmData = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/v1/project/${item.id}/vms`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-        const data = await response.json();
-        
-        if (data.vminfo && data.vminfo.length > 0) {
-          const statuses = data.vminfo.map(vm => ({
-            purpose: vm.vm_purpose,
-            status: vm.status
-          }));
-          setVmStatuses(statuses);
-        } else {
-          setVmStatuses([]);
+    if (!item.id.endsWith('с')) {
+      const fetchVmData = async () => {
+        try {
+          const response = await fetch(`${apiUrl}/v1/project/${item.id}/vms`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+          });
+          const data = await response.json();
+          
+          if (data.vminfo && data.vminfo.length > 0) {
+            const statuses = data.vminfo.map(vm => ({
+              purpose: vm.vm_purpose,
+              status: vm.status
+            }));
+            setVmStatuses(statuses);
+          } else {
+            setVmStatuses([]);
+          }
+        } catch (error) {
+          console.error('Error fetching VM data:', error);
         }
-      } catch (error) {
-        console.error('Error fetching VM data:', error);
-      }
-    };
+      };
 
-    fetchVmData();
+      fetchVmData();
 
-    const intervalId = setInterval(fetchVmData, 10000);
-    return () => clearInterval(intervalId);
-  }, [item.id]);
+      const intervalId = setInterval(fetchVmData, 10000);
+      return () => clearInterval(intervalId);
+    }
+  }, [item.id, apiUrl]);
 
   const getStatusColor = (status) => {
     if (status === undefined) {
@@ -192,7 +191,7 @@ const Item = ({ item, index, handleItemDragStart, handleItemDragEnd, handleItemD
               <div className="item-content-header">
                 <div style={{ minWidth: '80px', }}>
                   <Team project_id={item.id} />
-                  <Investment investmentAmount={investmentAmount} setInvestmentAmount={setInvestmentAmount} project_id={item.id} />
+                  {/* <Investment investmentAmount={investmentAmount} setInvestmentAmount={setInvestmentAmount} project_id={item.id} /> */}
                 </div>
               </div>
               <div className="item-content-body">

@@ -1,15 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Item from '../Item';
+import SearchBar from '../SearchBar/SearchBar';
 
-const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, maxY, lastActiveItem, setLastActiveItem, boardOccupiedSpace, boardRef,handleDuplicateItem, onItemDragEnd, draggedItemId, setDraggedItemId }) => {
+const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, maxY, lastActiveItem, setLastActiveItem, boardOccupiedSpace, boardRef, handleDuplicateItem, onItemDragEnd, draggedItemId, setDraggedItemId }) => {
   const [offsetY, setOffsetY] = useState(0);
   const itemWidth = 100;
   const itemHeight = 100;
+  const itemRefs = useRef({});
 
   const handleItemDragStart = (item, event) => {
     setDraggedItemId(item.id);
-    // console.log('dragging');
     const { clientX, clientY } = event;
   
     const boardElement = boardRef.current;
@@ -31,7 +32,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
     setItems(updatedItems);
     isDragging.current = true;
   };
-  // console.log('123')
+
   const handleItemDrag = (item, event) => {
     const { clientX, clientY } = event;
 
@@ -77,22 +78,19 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
       console.error(`Failed to move item: ${item.id}. Board or Item not found.`);
     }
   };
-  
 
-  
   const handleItemDragEnd = (item) => {
-    // console.log(setDraggedItemId)
     const isInsideGrid = isItemInsideBoard(item.x, item.y);
     const boardElement = boardRef.current; 
     const itemElement = document.getElementById(item.id); 
     const isInsideBoard = boardElement && boardElement.contains(itemElement);
+
 
     if (!isInsideGrid) {
         const duplicateId = `${item.id}с`;
         const duplicateItem = items.find(i => i.id === duplicateId);
 
         if (duplicateItem) {
-
             const updatedItems = items.map((i) =>
                 i.id === item.id
                     ? { ...i, x: duplicateItem.x, y: duplicateItem.y }
@@ -102,16 +100,50 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
             const finalItems = updatedItems.filter(i => i.id !== duplicateId);
 
             setItems(finalItems);
-
             localStorage.setItem('items', JSON.stringify(finalItems));
         } else {
             console.warn(`Duplicate item with id ${duplicateId} not found.`);
         }
     }
-};
+  };
+
+  const blinkItem = (itemElement) => {
+    let blinkCount = 0;
+    const maxBlinks = 6; 
+    const originalColor = itemElement.style.backgroundColor;
+    const originalTColor = itemElement.style.color;
+  
+    const interval = setInterval(() => {
+      itemElement.style.backgroundColor = blinkCount % 2 === 0 ? 'rgba(73, 55, 216, 1)' : originalColor;
+      itemElement.style.color = blinkCount % 2 === 0 ? 'rgba(192, 201, 255, 1)' : originalTColor;
+      blinkCount++;
+  
+      if (blinkCount > maxBlinks) {
+        clearInterval(interval);
+        itemElement.style.backgroundColor = originalColor; 
+        itemElement.style.color = originalTColor;
+      }
+    }, 300); 
+  };
 
   const handleItemDoubleClick = (itemId) => {
     setItems(items.map((item) => (item.id === itemId ? { ...item, expanded: !item.expanded } : item)));
+  };
+
+  const scrollToItem = (itemId) => {
+    const itemElement = document.getElementById(itemId);
+    if (itemElement) {
+      // console.log(itemElement)
+      const rect = itemElement.getBoundingClientRect();
+      const scrollY = rect.top + window.scrollY;
+      window.scrollTo({
+        top: scrollY,
+        behavior: 'smooth',
+      });
+      blinkItem(itemElement);
+    } else {
+      console.warn(`Item ${itemId} не найден`);
+    }
   };
 
   return (
@@ -125,25 +157,27 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
             flexDirection: 'column',
             height: '700px', 
             minWidth: '250px', 
-            // border: '1px solid black',
-            overflow: 'scroll',
+            // overflow: 'scroll',
+            // position: 'relative',
           }}
         >
+          <SearchBar items={items} scrollToItem={scrollToItem} />
           {items.map((item, index) => {
             const isChild = isItemInsideBoard(item.x, item.y);
             return (
-              <Item
-                key={item.id}
-                item={item}
-                index={index}
-                handleItemDragStart={handleItemDragStart}
-                handleItemDrag={handleItemDrag}
-                handleItemDragEnd={handleItemDragEnd}
-                handleItemDoubleClick={handleItemDoubleClick}
-                isChild={isChild}
-                handleDuplicateItem={handleDuplicateItem}
-                draggedItemId={draggedItemId}
-              />
+              // <div ref={itemRefs.current[item.id]} key={item.id}>
+                <Item
+                  item={item}
+                  index={index}
+                  handleItemDragStart={handleItemDragStart}
+                  handleItemDrag={handleItemDrag}
+                  handleItemDragEnd={handleItemDragEnd}
+                  handleItemDoubleClick={handleItemDoubleClick}
+                  isChild={isChild}
+                  handleDuplicateItem={handleDuplicateItem}
+                  draggedItemId={draggedItemId}
+                />
+              // </div>
             );
           })}
           {provided.placeholder}

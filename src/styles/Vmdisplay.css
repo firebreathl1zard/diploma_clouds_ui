@@ -15,7 +15,7 @@
   margin-bottom: 20px;
   padding: 5px;
   border: 1px solid #333;
-  border-radius: 5px;
+  border-radius: 14%;
   background-color: #534F73;
 }
 
@@ -47,13 +47,14 @@
 }
 
 .action-button:hover {
-  background-color: #f0f0f0;
+  /* background-color: #f0f0f0; */
 }
 
 
 
 
 .settings-button {
+  margin-left: -30px;
   background: none;
   border: none;
   cursor: pointer;
@@ -107,9 +108,9 @@
   align-items: center; 
 }
 
-.vm-header p {
+/* .vm-header p {
   margin: 0; 
-}
+} */
 
 button:disabled {
   opacity: 0.5;
@@ -124,4 +125,21 @@ button:disabled {
   display: flex;
   flex-direction: row;
   gap: 15px;
+}
+.purposeHeader {
+  font-size: 30px;
+  margin-left: 6px;
+}
+.uptimeHeader {
+  width: 90px;
+  /* margin-left: 5px; */
+}
+.vm-item button {
+  padding: 0;
+}
+.container{
+  display: flex;
+  /* justify-content: center; */
+  margin-left: 40px;
+  gap: 20px;
 }

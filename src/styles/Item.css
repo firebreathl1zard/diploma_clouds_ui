@@ -56,8 +56,9 @@
   
   .item-content-header {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    align-items: center; 
+    overflow: hidden;
   }
   
   .item-content-body {
@@ -85,7 +86,7 @@
 
   .item-content-body {
     display: flex;
-    flex-direction: column; 
+    flex-direction: row; 
   }
   
  
@@ -95,16 +96,19 @@
 }
 
 .status-indicator {
-  width: 12px; 
-  height: 12px; 
-  border-radius: 50%; 
-  margin-left: 0px;
-  min-width: 12px;
-  min-height: 12px;
+  
+  margin: auto;
+  
+  
+  
 }
 .status-indicators-container {
   display: flex;
   flex-direction: column; 
+  max-height: 30px;
+  justify-content: space-between;
+  gap: 1px;
+  margin-left: 5px;
   /* align-items: flex-start;  */
 }
 
@@ -112,6 +116,7 @@
   width: 10px; 
   height: 10px;
   border-radius: 50%;
+  
   /* margin: 2px 0;  */
 }
 .item.copy {
