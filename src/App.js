@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { WorkflowPages } from './pages/Workflow';
 import { AuthorizationPages } from './pages/Authorization';
 import ConsolePage from './pages/Console';
+import AdminPage from './pages/Admin';
 import { useNavigate } from 'react-router-dom';
 import SSEComponent from './components/SSEComponent/SSEComponent';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
@@ -31,6 +32,16 @@ function App() {
           element={
             status === 'Login successful' ? (
               <ConsolePage /> 
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } 
+        />
+        <Route 
+          path="/admin" 
+          element={
+            status === 'Login successful' ? (
+              <AdminPage />
             ) : (
               <Navigate to="/login" replace />
             )

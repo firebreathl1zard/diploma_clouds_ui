@@ -1,5 +1,5 @@
 import React from 'react';
-import resetImage from '../../../images/reset_hard_icon_246243.png';
+import resetImage from '../../../images/tdesign_clear-formatting-1.svg';
 
 const ResetButton = ({ onClick, isLoading, vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;

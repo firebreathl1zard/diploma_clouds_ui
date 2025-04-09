@@ -1,5 +1,5 @@
 import React from 'react';
-import stopImage from '../../../images/attentionexclamationtriangularsignal_104969.png';
+import stopImage from '../../../images/material-symbols_warning-outline-rounded.svg';
 
 const StopButton = ({ onClick, isLoading, vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;
