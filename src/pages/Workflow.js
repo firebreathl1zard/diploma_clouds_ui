@@ -4,13 +4,19 @@ import Board from '../components/Board';
 import Menu from '../components/Menu/Menu';
 import { MenuProvider } from '../hooks/Menu/MenuContext';
 import Profile from '../components/Profile';
-import { useDispatch } from 'react-redux';
+import SearchBar from '../components/SearchBar/SearchBar';
+import { useDispatch, useSelector } from 'react-redux';
 import { unauthorized } from './authSlice';
 import '../styles/HomePages.css'; 
 
 const WorkflowPages = () => {
-  const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const items = useSelector((state) => state.items);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setFilteredItems(items);
+  }, [items]);
 
   const handleOnDragEnd = (result) => {    
     if (!result.destination) return;
@@ -23,7 +29,7 @@ const WorkflowPages = () => {
       item.zIndex = index + 1;
     });
 
-    setItems(itemsCopy);   
+    setFilteredItems(itemsCopy); 
   };
 
   const checkTokenExpiration = () => {
@@ -51,14 +57,14 @@ const WorkflowPages = () => {
 
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
+      <SearchBar className='SearchBarWorkflow' setFilteredItems={setFilteredItems}/>
       <div style={{
         display: 'flex',
         flexDirection: 'row',
       }}>
       <MenuProvider>
-      <Menu />
+      <Menu items={filteredItems} setItems={setFilteredItems}/>
       </MenuProvider>
-      {/* <Board items={items} setItems={setItems} isDragging={isDragging} /> */}
       </div>
       <div className='profile-container'><Profile></Profile></div>
     </DragDropContext>

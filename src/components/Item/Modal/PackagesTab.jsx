@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import AvailablePackagesModal from './AvailablePackagesModal';
 
-const PackagesTab = ({ onPackageSelect }) => {
-    const [packages, setPackages] = useState([]);
+const PackagesTab = ({ onPackageSelect, vm_id, projectId, setIsAvailablePackagesModalOpen, setPackages }) => {
+    const [attachedPackages, setAttachedPackages] = useState([]);
     const apiUrl = process.env.REACT_APP_API_URL; 
 
     useEffect(() => {
-        const fetchPackages = async () => {
+        const fetchAttachedPackages = async () => {
             try {
-                const response = await fetch(`${apiUrl}/v1/package/all`, {
+                const response = await fetch(`${apiUrl}/v1/project/${projectId}/vm/${vm_id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -15,27 +17,35 @@ const PackagesTab = ({ onPackageSelect }) => {
                     credentials: 'include',
                 });
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Сетевая ошибка');
                 }
                 const data = await response.json();
-                setPackages(data.packages);
+                setAttachedPackages(data.packages);
             } catch (error) {
-                console.error('Error fetching packages:', error);
+                console.error('Ошибка при получении привязанных пакетов:', error);
             }
         };
 
-        fetchPackages();
-    }, []);
+        fetchAttachedPackages();
+    }, [apiUrl, projectId, vm_id]);
+
+
 
     return (
         <>
-            <h3>Пакеты</h3>
+            <h3>Привязанные пакеты:</h3>
             <ul>
-                {packages.map(pkg => (
-                    <li key={pkg.package_id} title={pkg.package_name} onClick={() => onPackageSelect(pkg)}>
-                        {pkg.package_name}
+                {attachedPackages.map(pkg => (
+                    <li key={pkg.id}>
+                        {pkg.package_name} <br /> {pkg.package_version}
                     </li>
                 ))}
+                <li 
+                    onClick={() => setIsAvailablePackagesModalOpen(true)}
+                    style={{ fontSize: '20px', textAlign: 'center', cursor: 'pointer' }}
+                >
+                    +
+                </li>
             </ul>
         </>
     );

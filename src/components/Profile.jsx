@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; 
 import SSHkey from './SSHkey';
+import AdminButton from './adminbtn/AdminButton';
 import profileImage from '../images/profile-btn.png';
 import { useDispatch } from 'react-redux';
 import { unauthorized } from '../pages/authSlice';
+import { setUserData } from './userSlice';
+
 
 const Profile = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [isOpen, setIsOpen] = useState(false);
-  const [userData, setUserData] = useState({ login: '', role: '' });
+  const [userData, setUserDataState] = useState({ login: '', role: '' });
   const dispatch = useDispatch();
 
   const toggleProfile = () => {
@@ -29,7 +32,7 @@ const Profile = () => {
         throw new Error('Network response was not ok');
       }
 
-      console.log("User  logged out");
+      console.log("User logged out");
       dispatch(unauthorized());
 
       // localStorage.removeItem('items');
@@ -55,9 +58,9 @@ const Profile = () => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
         const data = await response.json();
-        setUserData({ login: data.userlogin, role: data.userRole }); 
+        setUserDataState({ login: data.userlogin, role: data.userRole }); 
+        dispatch(setUserData({ login: data.userlogin, role: data.userRole }));
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -66,18 +69,21 @@ const Profile = () => {
     fetchUserData();
   }, [apiUrl]);
 
+
   return (
     <div style={{ position: 'relative' }}>
-      <div onClick={toggleProfile} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+      <div onClick={toggleProfile} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onMou>
         <img width='30px' height='30px' src={profileImage} alt="Profile Icon" />
       </div>
       {isOpen && (
-        <div style={{
+        <div 
+        onMouseLeave={toggleProfile}
+        style={{
           position: 'absolute',
-          top: '40px', 
-          right: '0', 
+          top: '-10px', 
+          right: '-10px', 
           width: '300px',
-          height: '250px',
+          height: 'auto',
           marginTop: '10px',
           border: '1px solid #ccc',
           padding: '10px',
@@ -99,10 +105,11 @@ const Profile = () => {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', margin: '20px auto' }}>
             <SSHkey />
+            {userData.login === "i22s0626" && <AdminButton />}
             <button 
                   onClick={handleLogout} 
                   style={{
-                      marginTop: '10px',
+                      marginTop: '0px',
                       width: '224px',
                       height: '40px',
                       backgroundColor: '#534F73',

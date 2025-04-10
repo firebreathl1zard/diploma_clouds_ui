@@ -1,58 +1,23 @@
-/* body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+  ::-webkit-scrollbar {
+    width: 12px;
   }
   
-  .app {
-    position: relative;
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #14131C;
+    border-radius: 10px;
   }
   
-  .burger {
-    position: absolute; 
-    top: 20px; 
-    left: 20px; 
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    z-index: 10; 
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #292739;
   }
   
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: -250px; 
-    width: 250px;
-    height: 100%;
-    background-color: #333;
-    color: white;
-    transition: left 0.3s ease;
-    z-index: 5; 
-  }
   
-  .sidebar.open {
-    left: 0; 
+  ::-webkit-scrollbar-track {
+    background: #292739;
+    border-radius: 10px;
   }
-  
-  .sidebar nav {
-    padding-top: 60px; 
-  }
-  
-  .sidebar nav ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .sidebar nav ul li {
-    padding: 15px;
-  }
-  
-  .sidebar nav ul li a {
-    color: white;
-    text-decoration: none;
-  }
-  
   .content {
     padding: 20px;
   } */
@@ -61,22 +26,22 @@
 
   
 ::-webkit-scrollbar {
-  width: 12px; /* Ширина вертикальной полосы прокрутки */
+  width: 12px;
 }
 
 
 ::-webkit-scrollbar-thumb {
-  background-color: #14131C; /* Цвет ползунка */
-  border-radius: 10px; /* Закругление углов */
+  background-color: #14131C;
+  border-radius: 10px;
 }
 
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #292739; /* Цвет ползунка при наведении */
+  background-color: #292739;
 }
 
 
 ::-webkit-scrollbar-track {
-  background: #292739; /* Цвет области полосы прокрутки */
-  border-radius: 10px; /* Закругление углов */
+  background: #292739;
+  border-radius: 10px;
 }

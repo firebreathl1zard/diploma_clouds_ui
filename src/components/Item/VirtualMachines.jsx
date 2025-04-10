@@ -21,6 +21,14 @@ const VirtualMachines = ({ projectId }) => {
   const [intervalId, setIntervalId] = useState(null);
   const [uptimes, setUptimes] = useState({});
 
+  const userData = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (userData.login === "i22s0626") {
+      console.log('i22s0626');
+    }
+  }, [userData.login]);
+
   const formatUptime = (uptimeInSeconds) => {
     const days = Math.floor(uptimeInSeconds / (24 * 3600));
     const hours = Math.floor((uptimeInSeconds % (24 * 3600)) / 3600);
@@ -166,13 +174,15 @@ const VirtualMachines = ({ projectId }) => {
             <div className="vm-item" key={vm.vm_id} style={{ border: `2px solid ${getBorderColor(vm.status)}` }}>
               <div className="vm-header">
                 <div className="vm-purpose-uptime">
-                  <p>{vm.vm_purpose}</p>
-                  <p>{formatUptime(uptimes[vm.vm_id] || 0)}</p>
+                  <p className="purposeHeader">{vm.vm_purpose}</p>
+                  <p className="uptimeHeader">{formatUptime(uptimes[vm.vm_id] || 0)}</p>
                 </div>
                 <SettingsButton 
                   title="Настройки" 
                   vm_id={vm.vm_id} 
+                  userLogin={userData.login}
                   projectId={projectId} 
+                  vm_ip={vm.vm_ip_address}
                   cpu={vm.configuration[0].cpu}
                   ram={vm.configuration[0].ram}
                   buttons={{
@@ -204,7 +214,7 @@ const VirtualMachines = ({ projectId }) => {
               ))}
               <div className="action-buttons">
                 {vm.status === 'starting' || vm.status === 'running' ? (
-                  <>
+                  <div className="container">
                     <ShutdownButton 
                       vm_id={vm.vm_id} 
                       project_id={projectId} 
@@ -219,9 +229,9 @@ const VirtualMachines = ({ projectId }) => {
                       onClick={handleButtonClick} 
                       disabled={isButtonDisabled(vm.status, 'reboot')}
                     />
-                  </>
+                  </div>
                 ) : vm.status === 'shutting down' || vm.status === 'stopped' ? (
-                  <>
+                  <div className="container">
                     <StartButton 
                       vm_id={vm.vm_id} 
                       project_id={projectId} 
@@ -236,7 +246,7 @@ const VirtualMachines = ({ projectId }) => {
                       onClick={handleButtonClick} 
                       disabled={isButtonDisabled(vm.status, 'reboot')}
                     />
-                  </>
+                  </div>
                 ) : (
                   <>
                     <StartButton 

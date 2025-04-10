@@ -86,8 +86,8 @@ li {
 }
 
 li:hover {
-    background-color: #C0C9FF;
-    color: #4937D8;
+    color:#000;
+    background-color: #f0f0f0;
 }
 
 .selected-key {

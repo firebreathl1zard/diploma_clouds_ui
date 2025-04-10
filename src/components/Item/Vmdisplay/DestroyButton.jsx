@@ -1,5 +1,5 @@
 import React from 'react';
-import destroyImage from '../../../images/trashcan_delete_remove_trash_icon_178327.png';
+import destroyImage from '../../../images/mdi_trash-outline.svg';
 
 const DestroyButton = ({ onClick, isLoading, vm_id, disabled }) => {
   const apiUrl = process.env.REACT_APP_API_URL;

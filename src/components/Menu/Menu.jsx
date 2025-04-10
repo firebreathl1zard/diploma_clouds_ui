@@ -90,14 +90,14 @@ const Menu = () => {
     <>
     
     <DragDropContext onDragEnd={handleOnDragEnd}>
-    <div style={{margin:'auto'}}>
+      <div style={{margin:'auto'}}>
       <h1 style={{
         textAlign: 'center', 
         color: 'white', 
         marginTop: '20px',
         marginBottom: '20px' 
       }}>VM VIEWER</h1>
-      <Board2
+      <Board2 
         items={localItems} 
         setItems={setLocalItems} 
         isDragging={isDragging} 
@@ -118,7 +118,7 @@ const Menu = () => {
         setDraggedItemId={setDraggedItemId}
       />
       </div>
-      <Board 
+       <Board 
         items={itemes} 
         setItems={setItemes} 
         isDragging={isDragging}
