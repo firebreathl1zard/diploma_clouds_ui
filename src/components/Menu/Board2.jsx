@@ -149,7 +149,7 @@ const Board2 = ({ items, setItems, isDragging, snapToGrid, minX, maxX, minY, max
   return (
     <Droppable droppableId="board2">
       {(provided) => (
-        <div
+        <div className='scrolldigns'
           ref={boardRef}
           {...provided.droppableProps}
           style={{
