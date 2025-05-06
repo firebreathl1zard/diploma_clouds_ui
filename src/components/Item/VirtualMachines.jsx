@@ -179,6 +179,7 @@ const VirtualMachines = ({ projectId }) => {
                 </div>
                 <SettingsButton 
                   title="Настройки" 
+                  purpose={vm.vm_purpose}
                   vm_id={vm.vm_id} 
                   userLogin={userData.login}
                   projectId={projectId} 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import '../styles/AdminPages.css';
 import FinancesTab from '../components/Admin/FinancesTab/finances'; 
 import ManagmentTab from '../components/Admin/ManagmentTab/managment'; 
+import PackagesTab from '../components/Admin/PackagesTab/PackagesTab'; 
 
 function AdminPages() {
     const [activeTab, setActiveTab] = useState("management");
@@ -11,9 +12,9 @@ function AdminPages() {
             case "management":
                 return <ManagmentTab/>;
             case "finance":
-                return <FinancesTab />;;
+                return <FinancesTab />;
             case "packages":
-                return <div>Содержимое пакетов</div>;
+                return <PackagesTab />;
             case "configuration":
                 return <div>Содержимое конфигурации</div>;
             default:
