@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import vmData from "../../../consts/vms";
+import React, { useState, useEffect } from "react";
 import DestroyButton from "../../Item/Vmdisplay/DestroyButton";
 import ResetButton from "../../Item/Vmdisplay/ResetButton";
 import RebootButton from "../../Item/Vmdisplay/RebootButton";
@@ -18,9 +17,29 @@ const getBorderColor = (status, isSelected) => {
             return 'yellow';
     }
 };
-
 function ManagmentTab() {
     const [selectedProjects, setSelectedProjects] = useState(new Set());
+    const [vmData, setVmData] = useState([]);
+    const apiUrl = process.env.REACT_APP_API_URL; 
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${apiUrl}/v1/vm/all`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                setVmData(data.data);
+            } catch (error) {
+                console.error("Ошибка при загрузке данных:", error);
+            }
+        };
+        fetchData();
+    }, []);
 
     const toggleSelectVm = (vmId, projectId) => {
         const newSelectedProjects = new Set(selectedProjects);
@@ -31,7 +50,6 @@ function ManagmentTab() {
         }
         setSelectedProjects(newSelectedProjects);
     };
-
     const selectAllProjects = () => {
         const allProjectIds = new Set(vmData.map(project => project.project_id));
         if (selectedProjects.size === allProjectIds.size) {
@@ -44,7 +62,6 @@ function ManagmentTab() {
     const handleShowSelectedProjects = () => {
         console.log("Выбранные проекты:", Array.from(selectedProjects).join(", "));
     };
-
     return (
         <>
             <h3>Virtual Machines Management</h3>
@@ -55,8 +72,8 @@ function ManagmentTab() {
                 <ul style={{ display: 'flex', flexDirection: 'column', flex: "none", width: '900px' }}>
                     {vmData.length > 0 ? (
                         vmData.map((project) => (
-                            project.vminfo && project.vminfo.length > 0 ? (
-                                project.vminfo.map((vm) => {
+                            project.vms && project.vms.length > 0 ? (
+                                project.vms.map((vm) => {
                                     const ipAddresses = vm.vm_ip_address;
                                     const second_ip = ipAddresses.split(",")[1];
                                     const isSelected = selectedProjects.has(project.project_id);
@@ -79,7 +96,7 @@ function ManagmentTab() {
                                                 <p>Project ID: {project.project_id}</p>
                                                 <p>CPU: {vm.configuration[0].cpu}</p>
                                                 <p>RAM: {vm.configuration[0].ram} GB</p>
-                                                <p>IP Address: {second_ip}</p>
+                                                <p>IP Address: {vm.vm_ip_address}</p>
                                             </div>
                                         </li>
                                     );
@@ -94,15 +111,14 @@ function ManagmentTab() {
                 </ul>
                 <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '20px', marginTop: '4px' }}>
                     {vmData.map((project) => (
-                        project.vminfo && project.vminfo.length > 0 ? (
-                            project.vminfo.map((vm) => {
+                        project.vms && project.vms.length > 0 ? (project.vms.map((vm) => {
                                 const isSelected = selectedProjects.has(project.project_id);
 
                                 return (
                                     <div key={vm.vm_id} style={{ display: 'flex', flexDirection: 'row', gap: '5px', marginBottom: '13px' }}>
                                         <div 
                                             onClick={() => toggleSelectVm(vm.vm_id, project.project_id)} 
-                                            style={{ 
+                                            style={{
                                                 cursor: 'pointer',
                                                 width: '45px',
                                                 height: '45px',
@@ -116,8 +132,7 @@ function ManagmentTab() {
                                     </div>
                                 );
                             })
-                        ) : null
-                    ))}
+                        ) : null))}
                 </div>
             </div>
             <DestroyButton />

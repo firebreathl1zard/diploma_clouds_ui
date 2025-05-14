@@ -145,3 +145,8 @@ button:active {
 .confirmation .cancel-button:hover {
     background-color: #d32f2f;
 }
+.domen {
+    color: black;
+    width: 150px;
+    height: 40px;
+}

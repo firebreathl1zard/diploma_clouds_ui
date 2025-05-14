@@ -14,13 +14,15 @@ import AvailablePackagesModal from '../Modal/AvailablePackagesModal';
 import Investment from '../Investment';
 import PaymentButton from '../PaymentButton';
 
-const SettingsButton = ({ vm_id, buttons, cpu, ram, projectId, vm_ip, userLogin }) => {
+const SettingsButton = ({ vm_id, buttons, cpu, ram, projectId, vm_ip, userLogin, purpose }) => {
     const [packages, setPackages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('general');
     const [activeModal, setActiveModal] = useState(null);
     const [selectedPackage, setSelectedPackage] = useState(false);
     const [isAvailablePackagesModalOpen, setIsAvailablePackagesModalOpen] = useState(false);
+    const [domainName, setDomainName] = useState(`${purpose}`);
+    const [port, setPort] = useState(3000);
     const userData = useSelector((state) => state.user);
     const apiUrl = process.env.REACT_APP_API_URL; 
 
@@ -63,7 +65,6 @@ const SettingsButton = ({ vm_id, buttons, cpu, ram, projectId, vm_ip, userLogin 
                 console.error('Ошибка при копировании: ', err);
             });
         };
-        // console.log(userData)
 
         const handleAdmin = () => {
             if(userData.role === 'admin') {
@@ -72,20 +73,42 @@ const SettingsButton = ({ vm_id, buttons, cpu, ram, projectId, vm_ip, userLogin 
                 return userData.login
             }
         }
-        
-    
+
+        const fullUrl = `http://${domainName}.${projectId}.virtuallab.it-college.ru:${port}`;
+
         return (
             <>
                 <h3>General</h3>
                 <div className="general-info">
-                <Investment project_id={projectId} />
-                    <p>IP: {secondIp}</p>
+                    <Investment project_id={projectId} />
+                    <p>IP: {vm_ip}</p>
                     <p>CPU: {cpu}</p>
                     <p>RAM: {ram}</p>
-                    <pre onClick={() => handleCopyToClipboard(`ssh ${handleAdmin()}@${secondIp}`)}>ssh {handleAdmin()}@{secondIp}</pre>
+                    <pre onClick={() => handleCopyToClipboard(`ssh ${handleAdmin()}@${vm_ip}`)}>ssh {handleAdmin()}@{vm_ip}</pre>
+                    <div>
+                        <p>
+                            Домен:
+                            <input 
+                                className='domen'
+                                type="text" 
+                                value={domainName} 
+                                onChange={(e) => setDomainName(e.target.value)}
+                                maxLength={10} 
+                            />
+                        </p>
+                        <p>
+                            Порт:
+                            <input 
+                                type="number" 
+                                value={port} 
+                                onChange={(e) => setPort(e.target.value)} 
+                            />
+                        </p>
+                    </div>
+                    <p>Полный URL: <a href={fullUrl} target="_blank" rel="noopener noreferrer">{fullUrl}</a></p>
                 </div>
-                {userLogin === "i22s0626" && <PaymentButton />}
-                <Link to="/console" className="navigate-button">Консоль</Link>
+                {userLogin === "a999" && <PaymentButton />}
+                <Link to="/console" className ="navigate-button">Консоль</Link>
                 <div className="general-buttons">
                     <StopButton 
                         onClick={buttons.stop.onClick} 

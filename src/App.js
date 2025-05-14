@@ -12,7 +12,9 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 function App() {
   const [data, setData] = useState(); 
   const status = useSelector((state) => state.auth.status);
-  console.log(status);
+  const userData = useSelector((state) => state.user);
+  // console.log(status);
+  console.log(userData)
 
   return (
     <BrowserRouter>
@@ -38,15 +40,19 @@ function App() {
           } 
         />
         <Route 
-          path="/admin" 
-          element={
-            status === 'Login successful' ? (
-              <AdminPage />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          } 
-        />
+            path="/admin" 
+            element={
+              status === 'Login successful' ? (
+                userData.role === 'admin' ? (
+                  <AdminPage />
+                ) : (
+                  <Navigate to="/workflow" replace />
+                )
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
         <Route
           path="*"
           element={

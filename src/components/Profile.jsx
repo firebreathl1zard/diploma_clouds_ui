@@ -105,7 +105,7 @@ const Profile = () => {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', margin: '20px auto' }}>
             <SSHkey />
-            {userData.login === "i22s0626" && <AdminButton />}
+            {userData.login === "a999" && <AdminButton />}
             <button 
                   onClick={handleLogout} 
                   style={{

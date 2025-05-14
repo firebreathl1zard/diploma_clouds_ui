@@ -10,21 +10,31 @@ const SSHkey = () => {
     const apiUrl = process.env.REACT_APP_API_URL; 
 
     const fetchSshKeys = async () => {
-        const response = await fetch(`${apiUrl}/v1/sshkeys`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-        });
-        const data = await response.json();
-        
-        if (data && Array.isArray(data.user_ssh_keys)) {
-            setSshKeys(data.user_ssh_keys);
-        } else {
-            setSshKeys([]);
+        try {
+            const response = await fetch(`${apiUrl}/v1/sshkeys`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            
+            if (data && Array.isArray(data.user_ssh_keys)) {
+                setSshKeys(data.user_ssh_keys);
+            } else {
+                setSshKeys([]);
+            }
+        } catch (error) {
+            console.error('Error fetching SSH keys:', error);
         }
     };
+    
 
     useEffect(() => {
         fetchSshKeys();
