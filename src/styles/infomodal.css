@@ -1,0 +1,76 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: rgb(39, 38, 51);
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 90%;
+    width: auto; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.tabs button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: none;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    color: #ffffff;
+}
+
+.tabs button:hover {
+    color: #4937D8;
+    background-color: #C0C9FF;
+    
+}
+
+.tabs button.active {
+    background-color: #534F73;
+    color: white;
+    border-color: #534F73;
+}
+
+.tab-content {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: rgb(39, 38, 51);
+}
+
+h2, h3 {
+    margin: 0 0 10px;
+}
+
+ol {
+    margin: 0;
+    padding-left: 20px;
+}
+.lii{
+    min-width: 100%;
+}
+
+pre {
+    background-color: rgba(124, 122, 140, 1);
+    padding: 5px;
+    border-radius: 4px;
+    overflow-x: auto;
+}

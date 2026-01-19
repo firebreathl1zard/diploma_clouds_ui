@@ -1,0 +1,15 @@
+.profile-container {
+    position: absolute; 
+    top: 20px; 
+    right: 20px; 
+    z-index: 1000; 
+    
+  }
+body {
+  background-color: rgba(41, 39, 57, 1);
+}
+/* .SearchBarWorkflow{
+  position: absolute;
+  left: 100px;
+  top: 20px
+} */

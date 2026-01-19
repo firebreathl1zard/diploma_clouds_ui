@@ -1,0 +1,37 @@
+.sidebar {
+    width: 200px;
+    padding: 10px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    color: white;
+    cursor: pointer;
+    width:130px;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    transition: background 0.3s;
+}
+
+.sidebar li:hover {
+    color: black;
+    background: #e0e0e0;
+}
+
+.sidebar li.active {
+    color: black;
+    background: #f0f0f0;
+}
+
+.content {
+    height: 755px;
+    border-left: 1px solid #ccc;
+    color: white;
+    padding: 10px;
+    flex: 1;
+}
